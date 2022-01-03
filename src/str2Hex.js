@@ -1,8 +1,7 @@
 export default function str2Hex(str, no = '5a6268') {
   if (!str || str?.length === 0) return no;
 
-  let hash = 0,
-      sl = str.length;
+  let hash = 0, sl = str.length;
 
   for (let i = 0; i < sl; i++) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);

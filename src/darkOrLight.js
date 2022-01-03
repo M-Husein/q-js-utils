@@ -1,7 +1,7 @@
 import cached from './cached';
 
 const darkOrLight = cached(color => {
-	let r, g, b, hsp;
+  let r, g, b, hsp;
   // Check the format of the color, HEX or RGB?
   if(color.match(/^rgb/)){
     // If HEX --> store the red, green, blue values in separate variables

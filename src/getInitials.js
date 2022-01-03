@@ -1,5 +1,9 @@
+import typeOf from './typeOf';
+
 export default function getInitials(name, no = "?"){
-  if(!name || !(typeof name === 'string') || name === " " || name.length < 1) return no;
+  if(!name || !(typeOf(name) === 'string') || name === " " || name.length < 1){
+    return no;
+  }
   // Destruct 
   let [first, last] = name.split(" ");
 
