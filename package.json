@@ -1,7 +1,7 @@
 {
   "name": "q-js-utils",
   "version": "1.0.0",
-  "description": "A collection of Javascript utilities.",
+  "description": "A collection of JavaScript utilities.",
   "main": "dist/q-js-utils.cjs.js",
   "module": "dist/q-js-utils.esm.js",
   "browser": "dist/q-js-utils.umd.js",

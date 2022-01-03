@@ -1,6 +1,6 @@
 # q-js-utils
 
-A collection of Javascript utilities.
+A collection of JavaScript utilities.
 
 ## Install
 
