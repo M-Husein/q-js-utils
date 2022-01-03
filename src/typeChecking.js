@@ -1,7 +1,8 @@
 /** === Type checking === */
 
-// FROM: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof#real-world_usage
-
+/** 
+ @FROM: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof#real-world_usage 
+*/
 export function typeOf(obj, showFull) {
   let toStr = Object.prototype.toString.call(obj);
   // get toPrototypeString() of obj (handles all types)

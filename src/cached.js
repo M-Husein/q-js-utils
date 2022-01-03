@@ -3,5 +3,5 @@ export default function cached(fn){
 	return (function cachedFn(s){
 		let hit = cache[s];
 		return hit || (cache[s] = fn(s))
-	})
+	});
 }
