@@ -1,0 +1,29 @@
+{
+  "name": "q-js-utils",
+  "version": "1.0.0",
+  "description": "A collection of Javascript utilities.",
+  "main": "dist/q-js-utils.cjs.js",
+  "module": "dist/q-js-utils.esm.js",
+  "browser": "dist/q-js-utils.umd.js",
+  "scripts": {
+    "build": "rollup -c",
+    "test": "node test/spec",
+    "pretest": "npm run build"
+  },
+  "keywords": [
+    "JavaScript",
+    "Utilities",
+    "Collection",
+    "Utils"
+  ],
+  "author": "Muhamad Husein",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.16.7",
+    "@babel/preset-env": "^7.16.7",
+    "rollup": "^2.62.0",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0"
+  }
+}
