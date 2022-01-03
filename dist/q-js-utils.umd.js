@@ -26,8 +26,20 @@
 	  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
 	}
 
+	function _toConsumableArray(arr) {
+	  return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+	}
+
+	function _arrayWithoutHoles(arr) {
+	  if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+	}
+
 	function _arrayWithHoles(arr) {
 	  if (Array.isArray(arr)) return arr;
+	}
+
+	function _iterableToArray(iter) {
+	  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
 	}
 
 	function _iterableToArrayLimit(arr, i) {
@@ -77,12 +89,16 @@
 	  return arr2;
 	}
 
+	function _nonIterableSpread() {
+	  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+	}
+
 	function _nonIterableRest() {
 	  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 	}
 
 	/** 
-	 @FROM: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof#real-world_usage 
+	 @FROM : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof#real-world_usage 
 	*/
 	function typeOf(obj, showFull) {
 	  var toStr = Object.prototype.toString.call(obj); // get toPrototypeString() of obj (handles all types)
@@ -173,11 +189,92 @@
 	  return first[0];
 	}
 
+	/**
+	 * @param {*} obj 
+	 * @param  {...any} omitKeys 
+	 * @returns 
+	*/
+	function objOmit(obj) {
+	  var res = {};
+
+	  for (var _len = arguments.length, omitKeys = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	    omitKeys[_key - 1] = arguments[_key];
+	  }
+
+	  for (var key in obj) {
+	    if (omitKeys.indexOf(key) === -1) res[key] = obj[key];
+	  }
+
+	  return res;
+	}
+
+	function obj2FormData(obj) {
+	  var fd = new FormData();
+
+	  for (var key in obj) {
+	    fd.append(key, obj[key]);
+	  }
+
+	  return fd;
+	}
+
+	function isMobile() {
+	  return !!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+	}
+
+	/** USAGE:
+	  @add    : setClass(element, "btn active");
+	  @remove : setClass(element, "btn active", 'remove'); 
+	*/
+	function setClass(el, c) {
+	  var _el$classList;
+
+	  var fn = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "add";
+	  el && c && fn && (_el$classList = el.classList)[fn].apply(_el$classList, _toConsumableArray(c.split(" ")));
+	}
+
+	/**
+	  @el   : Element / node
+	  @attr : attribute name & value (Object)
+	*/
+
+	function setAttr(el, attr) {
+	  if (el) {
+	    if (typeOf(attr) === "object") {
+	      for (var key in attr) {
+	        el.setAttribute(key, attr[key]);
+	      }
+	    } else if (typeOf(attr) === "string") {
+	      attr.split(" ").forEach(function (v) {
+	        return el.removeAttribute(v);
+	      });
+	    } // else console.warn('setAttr() : params 2 required Object to add / string to remove, To remove several attributes, separate the attribute names with a space.');
+
+	  }
+	}
+
+	// IE polyfills
+	// window.crypto = window.crypto || window.msCrypto;
+	// if(!window.crypto){
+	//   window.crypto = window.msCrypto;
+	// }
+	function uid() {
+	  var l = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 4;
+	  // let a = new Uint32Array(l); //  Int8Array | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array
+	  return String.fromCharCode(97 + Number(l)) + "_" + window.crypto.getRandomValues(new Uint32Array(l)).join("_");
+	}
+
 	exports.cached = cached;
 	exports.darkOrLight = darkOrLight;
 	exports.getInitials = getInitials;
+	exports.isMobile = isMobile;
+	exports.obj2FormData = obj2FormData;
+	exports.objOmit = objOmit;
+	exports.setAttr = setAttr;
+	exports.setClass = setClass;
 	exports.str2Hex = str2Hex;
 	exports.typeOf = typeOf;
+	exports.uid = uid;
 
 	Object.defineProperty(exports, '__esModule', { value: true });
 
