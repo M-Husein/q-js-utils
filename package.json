@@ -16,7 +16,29 @@
     "Collection",
     "Utils"
   ],
-  "author": "Muhamad Husein",
+  "author": {
+    "email": "m.husein27@gmail.com",
+    "name": "Muhamad Husein"
+  },
+  "maintainers": [
+    {
+      "email": "m.husein27@gmail.com",
+      "name": "Muhamad Husein"
+    }
+  ],
+  "contributors": [
+    {
+      "email": "m.husein27@gmail.com",
+      "name": "Muhamad Husein"
+    }
+  ],
+  "repository": {
+    "type": "",
+    "url": "https://github.com/M-Husein/q-js-utils"
+  },
+  "files": [
+    "dist/*"
+  ],
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.16.7",
