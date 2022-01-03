@@ -1,5 +1,3 @@
-// import { isStr } from './typeChecking';
-
 export default function getInitials(name, no = "?"){
 	if(!name || !(typeof name === 'string') || name === " " || name.length < 1) return no;
 	// Destruct 
