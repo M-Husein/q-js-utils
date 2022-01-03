@@ -1,11 +1,11 @@
-// import * as typeChecking from './typeChecking';
+import typeOf from './typeOf';
 import cached from './cached';
 import darkOrLight from './darkOrLight';
 import str2Hex from './str2Hex';
 import getInitials from './getInitials';
 
 export {
-  // typeChecking, 
+  typeOf, 
   cached, 
   darkOrLight, 
   str2Hex, 
