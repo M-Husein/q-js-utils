@@ -2,6 +2,12 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
+var cls = require('classnames');
+
+function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
+
+var cls__default = /*#__PURE__*/_interopDefaultLegacy(cls);
+
 function cached(fn) {
   var cache = Object.create(null);
   return function cachedFn(s) {
@@ -187,6 +193,16 @@ function getInitials(name) {
   return first[0];
 }
 
+function jsonParse(val) {
+  var returnErr = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  try {
+    return typeOf(val) === "string" ? JSON.parse(val) : returnErr;
+  } catch (e) {
+    return returnErr;
+  }
+}
+
 /**
  * @param {*} obj 
  * @param  {...any} omitKeys 
@@ -251,6 +267,12 @@ function setAttr(el, attr) {
   }
 }
 
+/** classnames return undefined if length < 1 for prevent react render class="" */
+
+function Cx() {
+  return cls__default["default"].apply(null, arguments) || undefined;
+}
+
 // IE polyfills
 // window.crypto = window.crypto || window.msCrypto;
 // if(!window.crypto){
@@ -262,10 +284,12 @@ function uid() {
   return String.fromCharCode(97 + Number(l)) + "_" + window.crypto.getRandomValues(new Uint32Array(l)).join("_");
 }
 
+exports.Cx = Cx;
 exports.cached = cached;
 exports.darkOrLight = darkOrLight;
 exports.getInitials = getInitials;
 exports.isMobile = isMobile;
+exports.jsonParse = jsonParse;
 exports.obj2FormData = obj2FormData;
 exports.objOmit = objOmit;
 exports.setAttr = setAttr;

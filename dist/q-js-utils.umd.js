@@ -189,6 +189,16 @@
 	  return first[0];
 	}
 
+	function jsonParse(val) {
+	  var returnErr = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+	  try {
+	    return typeOf(val) === "string" ? JSON.parse(val) : returnErr;
+	  } catch (e) {
+	    return returnErr;
+	  }
+	}
+
 	/**
 	 * @param {*} obj 
 	 * @param  {...any} omitKeys 
@@ -253,6 +263,72 @@
 	  }
 	}
 
+	var classnames = {exports: {}};
+
+	/*!
+	  Copyright (c) 2018 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+
+	(function (module) {
+	/* global define */
+
+	(function () {
+
+		var hasOwn = {}.hasOwnProperty;
+
+		function classNames() {
+			var classes = [];
+
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+
+				var argType = typeof arg;
+
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					if (arg.length) {
+						var inner = classNames.apply(null, arg);
+						if (inner) {
+							classes.push(inner);
+						}
+					}
+				} else if (argType === 'object') {
+					if (arg.toString === Object.prototype.toString) {
+						for (var key in arg) {
+							if (hasOwn.call(arg, key) && arg[key]) {
+								classes.push(key);
+							}
+						}
+					} else {
+						classes.push(arg.toString());
+					}
+				}
+			}
+
+			return classes.join(' ');
+		}
+
+		if (module.exports) {
+			classNames.default = classNames;
+			module.exports = classNames;
+		} else {
+			window.classNames = classNames;
+		}
+	}());
+	}(classnames));
+
+	var cls = classnames.exports;
+
+	/** classnames return undefined if length < 1 for prevent react render class="" */
+
+	function Cx() {
+	  return cls.apply(null, arguments) || undefined;
+	}
+
 	// IE polyfills
 	// window.crypto = window.crypto || window.msCrypto;
 	// if(!window.crypto){
@@ -264,10 +340,12 @@
 	  return String.fromCharCode(97 + Number(l)) + "_" + window.crypto.getRandomValues(new Uint32Array(l)).join("_");
 	}
 
+	exports.Cx = Cx;
 	exports.cached = cached;
 	exports.darkOrLight = darkOrLight;
 	exports.getInitials = getInitials;
 	exports.isMobile = isMobile;
+	exports.jsonParse = jsonParse;
 	exports.obj2FormData = obj2FormData;
 	exports.objOmit = objOmit;
 	exports.setAttr = setAttr;

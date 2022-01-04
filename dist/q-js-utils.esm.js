@@ -1,3 +1,5 @@
+import cls from 'classnames';
+
 function cached(fn) {
   var cache = Object.create(null);
   return function cachedFn(s) {
@@ -183,6 +185,16 @@ function getInitials(name) {
   return first[0];
 }
 
+function jsonParse(val) {
+  var returnErr = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+  try {
+    return typeOf(val) === "string" ? JSON.parse(val) : returnErr;
+  } catch (e) {
+    return returnErr;
+  }
+}
+
 /**
  * @param {*} obj 
  * @param  {...any} omitKeys 
@@ -247,6 +259,12 @@ function setAttr(el, attr) {
   }
 }
 
+/** classnames return undefined if length < 1 for prevent react render class="" */
+
+function Cx() {
+  return cls.apply(null, arguments) || undefined;
+}
+
 // IE polyfills
 // window.crypto = window.crypto || window.msCrypto;
 // if(!window.crypto){
@@ -258,4 +276,4 @@ function uid() {
   return String.fromCharCode(97 + Number(l)) + "_" + window.crypto.getRandomValues(new Uint32Array(l)).join("_");
 }
 
-export { cached, darkOrLight, getInitials, isMobile, obj2FormData, objOmit, setAttr, setClass, str2Hex, typeOf, uid };
+export { Cx, cached, darkOrLight, getInitials, isMobile, jsonParse, obj2FormData, objOmit, setAttr, setClass, str2Hex, typeOf, uid };
