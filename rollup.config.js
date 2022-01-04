@@ -1,8 +1,5 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-// import resolve from "rollup-plugin-node-resolve";
-// import commonjs from "rollup-plugin-commonjs";
 import { babel } from '@rollup/plugin-babel';
-// import babel from "rollup-plugin-babel";
 import commonjs from '@rollup/plugin-commonjs';
 import pkg from "./package.json";
 
