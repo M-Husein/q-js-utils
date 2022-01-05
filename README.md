@@ -28,17 +28,147 @@ console.log(initialName); // MH
 
 ## Utilities
 
+### cached
+
 ```js
 import cached from 'q-js-utils/cached';
 
 const sayHi = cached(name => 'Hi, ' + name);
 ```
 
+### typeOf
+
 ```js
 import typeOf from 'q-js-utils/typeOf';
 
 const getType = typeOf('Iam string');
 ```
+
+### darkOrLight
+
+```js
+import darkOrLight from 'q-js-utils/darkOrLight';
+
+const isDark = darkOrLight('#000');
+```
+
+### str2Hex
+
+```js
+import str2Hex from 'q-js-utils/str2Hex';
+
+const nameToHex = str2Hex('Muhamad Husein');
+```
+
+### getInitials
+
+```js
+import getInitials from 'q-js-utils/getInitials';
+
+const initialName = getInitials('Muhamad Husein');
+```
+
+### jsonParse
+
+```js
+import jsonParse from 'q-js-utils/jsonParse';
+
+const jsonResult = jsonParse(`{ "name": "Muhamad Husein", "email": "m.husein27@gmail.com" }`);
+```
+
+### objOmit
+
+```js
+import objOmit from 'q-js-utils/objOmit';
+
+const objData = {
+  name: "Muhamad Husein",
+  email: "m.husein27@gmail.com",
+  password: "MyPassword",
+  id: "1"
+};
+const omit = objOmit(objData, "password", "id"); // { name: "Muhamad Husein", email: "m.husein27@gmail.com" }
+```
+
+### obj2FormData
+
+```js
+import obj2FormData from 'q-js-utils/obj2FormData';
+
+const objData = {
+  name: "Muhamad Husein",
+  email: "m.husein27@gmail.com"
+};
+const dataForm = obj2FormData(objData);
+```
+
+### isMobile
+
+```js
+import isMobile from 'q-js-utils/isMobile';
+
+console.log(isMobile()); // true / false
+```
+
+### setClass
+
+```js
+import setClass from 'q-js-utils/setClass';
+
+const navbar = document.getElementById('navbar');
+
+// Add class
+setClass(navbar, "open"); // can multiple className e.g "open fade dark"
+
+// Remove class
+setClass(navbar, "open", "remove"); // can multiple className e.g "open fade dark"
+```
+
+### setAttr
+
+```js
+import setAttr from 'q-js-utils/setAttr';
+
+const sidebar = document.getElementById('sidebar');
+
+// Add attributes
+setAttr(sidebar, { "aria-hidden": "false", hidden: true });
+
+// Remove attributes
+setAttr(sidebar, "aria-hidden hidden");
+```
+
+### Cx
+#### https://github.com/JedWatson/classnames#readme
+
+```js
+import Cx from 'q-js-utils/Cx';
+
+// SEE: https://github.com/JedWatson/classnames#readme
+```
+
+### uid
+
+```js
+import uid from 'q-js-utils/uid';
+
+console.log(uid()); // print 4x random string separated with _
+console.log(uid(7)); // print 7x random string separated with _
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
