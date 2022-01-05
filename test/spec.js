@@ -15,3 +15,7 @@ assert.strictEqual(utils.getInitials('Muhamad Husein'), 'MH');
 // assert.strictEqual(utils.objOmit(USER, 'email','city'), { name: "Muhamad Husein", country: "Indonesia" });
 
 console.log(`\u001B[32m✓\u001B[39m Tests passed`);
+
+// "main": "dist/q-js-utils.cjs.js"
+// "module": "dist/q-js-utils.esm.js",
+// "browser": "dist/q-js-utils.umd.js",

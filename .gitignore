@@ -8,3 +8,7 @@ package-lock.json
 # misc
 .DS_Store
 
+# 
+/dist
+dist/
+

@@ -53,14 +53,14 @@ export default [
   
   ...FILES.map(file => ({
     input: "src/" + file, // Entry point
-    output: {
-      dir: "dist",
-      // format: "es",
-    },
-    // output: [
-    //   { file: "dist/" + file, format: "cjs" },
-    //   { file: "dist/" + file, format: "es" },
-    // ],
+    // output: {
+    //   dir: "dist",
+    //   // format: "es",
+    // },
+    output: [
+      { file: "dist/cjs/" + file, format: "cjs" },
+      { file: file, format: "es" },
+    ],
     plugins: [ 
       nodeResolve(),
       commonjs(),
