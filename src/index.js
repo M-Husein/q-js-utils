@@ -12,6 +12,7 @@ import setAttr from './setAttr';
 import Cx from './Cx';
 import uid from './uid';
 
+// export / export default
 export {
   cached, 
   typeOf, 

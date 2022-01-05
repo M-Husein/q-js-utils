@@ -12,6 +12,8 @@ npm install q-js-utils
 
 ```js
 import { typeOf, darkOrLight, str2Hex, getInitials } from 'q-js-utils';
+// Or
+// import * as utils from 'q-js-utils';
 
 const getType = typeOf('Iam string');
 const isDark = darkOrLight('#000');
@@ -23,4 +25,22 @@ console.log(isDark); // true
 console.log(nameToHex); // f529de
 console.log(initialName); // MH
 ```
+
+## Utilities
+
+```js
+import cached from 'q-js-utils/cached';
+
+const sayHi = cached(name => 'Hi, ' + name);
+```
+
+```js
+import typeOf from 'q-js-utils/typeOf';
+
+const getType = typeOf('Iam string');
+```
+
+
+
+
 

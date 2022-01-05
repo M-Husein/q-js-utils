@@ -12,6 +12,9 @@
             "not op_mini all"
           ]
         },
+        "exclude": [
+          "@babel/plugin-transform-typeof-symbol"
+        ],
         "modules": false
       }
     ]

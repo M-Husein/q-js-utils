@@ -6,7 +6,7 @@ import typeOf from './typeOf';
 */
 
 export default function setAttr(el, attr){
-  if(el){
+  if(el && attr){
     if(typeOf(attr) === "object"){
       for(let key in attr){
         el.setAttribute(key, attr[key]);
