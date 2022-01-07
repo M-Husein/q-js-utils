@@ -145,7 +145,7 @@ setAttr(sidebar, "aria-hidden hidden");
 ```
 
 ### Cx
-[go](https://github.com/JedWatson/classnames#readme){:target="_blank" rel="noopener noreferrer"}
+https://github.com/JedWatson/classnames#readme
 
 ```js
 import Cx from 'q-js-utils/Cx';
