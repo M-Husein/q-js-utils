@@ -1,6 +1,6 @@
 {
   "name": "q-js-utils",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A collection of JavaScript utilities.",
   "main": "dist/cjs/index.js",
   "module": "index.js",
