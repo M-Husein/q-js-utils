@@ -145,12 +145,12 @@ setAttr(sidebar, "aria-hidden hidden");
 ```
 
 ### Cx
-https://github.com/JedWatson/classnames#readme
+See: https://github.com/JedWatson/classnames#readme
 
 ```js
 import Cx from 'q-js-utils/Cx';
 
-// SEE: https://github.com/JedWatson/classnames#readme
+// See: https://github.com/JedWatson/classnames#readme
 ```
 
 ### uid
