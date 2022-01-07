@@ -17,19 +17,19 @@
     "Utils"
   ],
   "author": {
-    "email": "m.husein27@gmail.com",
-    "name": "Muhamad Husein"
+    "name": "Muhamad Husein",
+    "email": "m.husein27@gmail.com"
   },
   "maintainers": [
     {
-      "email": "m.husein27@gmail.com",
-      "name": "Muhamad Husein"
+      "name": "Muhamad Husein",
+      "email": "m.husein27@gmail.com"
     }
   ],
   "contributors": [
     {
-      "email": "m.husein27@gmail.com",
-      "name": "Muhamad Husein"
+      "name": "Muhamad Husein",
+      "email": "m.husein27@gmail.com"
     }
   ],
   "homepage": "https://github.com/M-Husein/q-js-utils",

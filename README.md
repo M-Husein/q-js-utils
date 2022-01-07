@@ -73,7 +73,13 @@ const initialName = getInitials('Muhamad Husein');
 ```js
 import jsonParse from 'q-js-utils/jsonParse';
 
-const jsonResult = jsonParse(`{ "name": "Muhamad Husein", "email": "m.husein27@gmail.com" }`);
+/**
+ * @param_1 : json string, required
+ * @param_2 : option to return error parse, default {}
+*/
+const jsonObject = jsonParse(`{ "name": "Muhamad Husein", "email": "m.husein27@gmail.com" }`);
+
+const jsonArray = jsonParse(`["React", "Vue", "Svelte", "Angular"]`, []);
 ```
 
 ### objOmit
@@ -139,7 +145,7 @@ setAttr(sidebar, "aria-hidden hidden");
 ```
 
 ### Cx
-#### https://github.com/JedWatson/classnames#readme
+%md <a href="https://github.com/JedWatson/classnames#readme" target="_blank" rel="noopener noreferrer">https://github.com/JedWatson/classnames#readme</a>
 
 ```js
 import Cx from 'q-js-utils/Cx';
@@ -151,6 +157,10 @@ import Cx from 'q-js-utils/Cx';
 
 ```js
 import uid from 'q-js-utils/uid';
+
+/**
+ * @param : word length, number, default = 4
+*/
 
 console.log(uid()); // print 4x random string separated with _
 console.log(uid(7)); // print 7x random string separated with _
