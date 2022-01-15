@@ -11,4 +11,6 @@ package-lock.json
 # 
 /dist
 dist/
+/1_BACKUP
+1_BACKUP/
 

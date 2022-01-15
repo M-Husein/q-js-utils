@@ -1,6 +1,7 @@
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { babel } from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
+import { terser } from 'rollup-plugin-terser';
 // import multi from '@rollup/plugin-multi-entry';
 import pkg from "./package.json";
 
@@ -16,7 +17,7 @@ const FILES = [
   "isMobile.js",
   "setClass.js",
   "setAttr.js",
-  "Cx.js",
+  // "Cx.js", 
   "uid.js",
 ];
 
@@ -26,7 +27,7 @@ export default [
     output: {
       name: "q-js-utils", // package name
       file: pkg.browser,
-      format: "umd",
+      format: "umd"
     },
     plugins: [
       nodeResolve(), // resolve
@@ -35,6 +36,7 @@ export default [
         babelHelpers: 'bundled',
         exclude: ["node_modules/**"],
       }),
+      terser(),
     ],
   },
   {
@@ -59,7 +61,7 @@ export default [
     // },
     output: [
       { file: "dist/cjs/" + file, format: "cjs" },
-      { file: file, format: "es" },
+      { file: "dist/esm/" + file, format: "es" },
     ],
     plugins: [ 
       nodeResolve(),
@@ -70,7 +72,7 @@ export default [
       }),
       // multi(),
     ],
-    external: ['classnames']
+    // external: ['classnames']
   }))
 ];
 
