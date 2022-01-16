@@ -1,0 +1,1 @@
+export default function setClass(el: HTMLElement, c: string, fn: string): void;

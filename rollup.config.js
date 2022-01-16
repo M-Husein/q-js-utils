@@ -3,10 +3,11 @@ import { babel } from '@rollup/plugin-babel';
 import commonjs from '@rollup/plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
 // import multi from '@rollup/plugin-multi-entry';
+// import typescript from "@rollup/plugin-typescript";
 import pkg from "./package.json";
 
 const FILES = [
-  "cached.js", // src/
+  "cached.js", 
   "typeOf.js", 
   "darkOrLight.js",
   "str2Hex.js",
@@ -17,7 +18,6 @@ const FILES = [
   "isMobile.js",
   "setClass.js",
   "setAttr.js",
-  // "Cx.js", 
   "uid.js",
 ];
 
@@ -25,7 +25,7 @@ export default [
   {
     input: "src/index.js", // Entry point
     output: {
-      name: "q-js-utils", // package name
+      name: "qJsUtils", // package name
       file: pkg.browser,
       format: "umd"
     },
@@ -40,28 +40,41 @@ export default [
     ],
   },
   {
-    input: "src/index.js", // Entry point
-    output: [
-      { file: pkg.main, format: "cjs" },
-      { file: pkg.module, format: "es" },
-    ],
+    input: "src/index.js", 
+    output: {
+      name: "qJsUtils", 
+      file: "dist/umd/q-js-utils.umd.js",
+      format: "umd"
+    },
     plugins: [
+      nodeResolve(), 
+      commonjs(),
       babel({
         babelHelpers: 'bundled',
         exclude: ["node_modules/**"],
       }),
     ],
   },
+  {
+    input: "src/index.js", 
+    output: [
+      { file: pkg.main, format: "cjs" },
+      { file: "index.js", format: "es" },
+    ],
+    plugins: [
+      babel({
+        babelHelpers: 'bundled',
+        exclude: ["node_modules/**"],
+      }),
+      // typescript({ tsconfig: "./tsconfig.json" }),
+    ],
+  },
   
   ...FILES.map(file => ({
-    input: "src/" + file, // Entry point
-    // output: {
-    //   dir: "dist",
-    //   // format: "es",
-    // },
+    input: "src/" + file, 
     output: [
       { file: "dist/cjs/" + file, format: "cjs" },
-      { file: "dist/esm/" + file, format: "es" },
+      { file, format: "es" }, // "dist/esm/" + file
     ],
     plugins: [ 
       nodeResolve(),

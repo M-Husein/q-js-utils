@@ -10,3 +10,4 @@ export { default as isMobile } from './isMobile';
 export { default as uid } from './uid';
 export { default as setClass } from './setClass';
 export { default as setAttr } from './setAttr';
+

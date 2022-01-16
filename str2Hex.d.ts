@@ -1,0 +1,1 @@
+export default function str2Hex(str: string, no: string): string;

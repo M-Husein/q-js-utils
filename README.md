@@ -77,9 +77,12 @@ import jsonParse from 'q-js-utils/jsonParse';
  * @param_1 : json string, required
  * @param_2 : option to return error parse, default {}
 */
-const jsonObject = jsonParse(`{ "name": "Muhamad Husein", "email": "m.husein27@gmail.com" }`);
 
-const jsonArray = jsonParse(`["React", "Vue", "Svelte", "Angular"]`, []);
+const dataStringObject = `{ "name": "Muhamad Husein", "email": "m.husein27@gmail.com" }`;
+const jsonObject = jsonParse(dataStringObject);
+
+const dataStringArray = `["React", "Vue", "Svelte", "Angular"]`;
+const jsonArray = jsonParse(dataStringArray, []);
 ```
 
 ### objOmit

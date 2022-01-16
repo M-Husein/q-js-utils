@@ -1,0 +1,1 @@
+export default function getInitials(name: string, no: string): string;

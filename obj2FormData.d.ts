@@ -1,0 +1,1 @@
+export default function obj2FormData(obj: object): any; // Function | object

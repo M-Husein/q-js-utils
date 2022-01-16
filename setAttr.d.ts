@@ -1,0 +1,1 @@
+export default function setAttr(el: HTMLElement | undefined, attr: object | string): void;
