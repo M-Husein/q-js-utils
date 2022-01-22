@@ -1,9 +1,7 @@
-function cached(fn) {
-  var cache = Object.create(null);
-  return function cachedFn(s) {
-    var hit = cache[s];
-    return hit || (cache[s] = fn(s));
-  };
+export default function cached(fn){
+	let cache = Object.create(null);
+	return (function cachedFn(s){
+		let hit = cache[s];
+		return hit || (cache[s] = fn(s))
+	});
 }
-
-export { cached as default };

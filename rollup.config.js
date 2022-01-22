@@ -23,14 +23,14 @@ const FILES = [
 
 export default [
   {
-    input: "src/index.js", // Entry point
+    input: "index.js", // Entry point
     output: {
       name: "qJsUtils", // package name
       file: pkg.browser,
       format: "umd"
     },
     plugins: [
-      nodeResolve(), // resolve
+      nodeResolve(), 
       commonjs(),
       babel({
         babelHelpers: 'bundled',
@@ -40,7 +40,7 @@ export default [
     ],
   },
   {
-    input: "src/index.js", 
+    input: "index.js", 
     output: {
       name: "qJsUtils", 
       file: "dist/umd/q-js-utils.umd.js",
@@ -56,10 +56,10 @@ export default [
     ],
   },
   {
-    input: "src/index.js", 
+    input: "index.js", 
     output: [
       { file: pkg.main, format: "cjs" },
-      { file: "index.js", format: "es" },
+      // { file: "index.js", format: "es" },
     ],
     plugins: [
       babel({
@@ -71,10 +71,10 @@ export default [
   },
   
   ...FILES.map(file => ({
-    input: "src/" + file, 
+    input: file, // "src/" + file
     output: [
       { file: "dist/cjs/" + file, format: "cjs" },
-      { file, format: "es" }, // "dist/esm/" + file
+      // { file, format: "es" }, // "dist/esm/" + file
     ],
     plugins: [ 
       nodeResolve(),

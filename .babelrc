@@ -13,7 +13,8 @@
           ]
         },
         "exclude": [
-          "@babel/plugin-transform-typeof-symbol"
+          "@babel/plugin-transform-typeof-symbol",
+          "@babel/plugin-transform-parameters"
         ],
         "modules": false
       }
