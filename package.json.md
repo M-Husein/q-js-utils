@@ -4,7 +4,7 @@
   "description": "A performance-oriented utility library for modern JavaScript/TypeScript applications.",
   "license": "MIT",
   "keywords": [
-    "utility", "javascript", "typescript", "fetch", "network", "array", "string", "utils", "lodash-like"
+    "utility", "javascript", "typescript", "fetch", "number", "array", "string", "utils", "lodash-like"
   ],
   "author": "Your Name <your.email@example.com>",
   "homepage": "https://github.com/your-username/your-utility-library#readme",
@@ -26,10 +26,10 @@
       "types": "./dist/index.d.ts"          // For TypeScript type resolution
     },
     // Expose specific modules for tree-shaking (subpath exports)
-    "./network": {
-      "import": "./dist/network.es.js",
-      "require": "./dist/network.cjs.js",
-      "types": "./dist/network.d.ts"
+    "./number": {
+      "import": "./dist/number.es.js",
+      "require": "./dist/number.cjs.js",
+      "types": "./dist/number.d.ts"
     },
     "./array": {
       "import": "./dist/array.es.js",

@@ -10,6 +10,8 @@ npm install q-js-utils
 
 ## Usage
 
+For the entire library (convenience, but potentially larger bundle if not tree-shaken by consumer's bundler):
+
 ```js
 import { darkOrLight, str2Hex, getInitials } from 'q-js-utils';
 // Or
@@ -22,6 +24,14 @@ const initialName = getInitials('Muhamad Husein');
 console.log(isDark); // true
 console.log(nameToHex); // f529de
 console.log(initialName); // MH
+```
+
+For specific modules (recommended for tree-shaking):
+
+```ts
+import { darkOrLight } from 'q-js-utils/darkOrLight';
+import { str2Hex } from 'q-js-utils/str2Hex';
+import { getInitials } from 'q-js-utils/getInitials';
 ```
 
 ## Utilities
@@ -44,7 +54,7 @@ console.log(padWithLeadingZeros(one)); // '01'
 
 ### request
 ```js
-import { request } from 'q-js-utils/network/request';
+import { request } from 'q-js-utils/request';
 
 try {
   const todo = await request('https://jsonplaceholder.typicode.com/todos/1').json();

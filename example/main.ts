@@ -1,5 +1,5 @@
 // Import functions directly from your library's source for hot-reloading during dev
-import { request } from '../src/network/request';
+import { request } from '../src/request';
 import { incrementId } from '../src/incrementId';
 import { asyncSimulation } from '../src/asyncSimulation';
 import { str2Hex } from '../src/str2Hex';

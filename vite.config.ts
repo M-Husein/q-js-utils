@@ -6,13 +6,13 @@ export default defineConfig({
   build: {
     lib: {
       // Define multiple entry points.
-      // The key of each entry will determine the output filename prefix (e.g., 'index', 'network', 'array').
+      // The key of each entry will determine the output filename prefix (e.g., 'index', 'number', 'request').
       // The value is the path to the source file for that entry.
       entry: {
         index: resolve(__dirname, 'src/index.ts'), // Main bundle
         number: resolve(__dirname, 'src/number/index.ts'),
         cached: resolve(__dirname, 'src/cached/index.ts'),
-        network: resolve(__dirname, 'src/network/request/index.ts'),
+        request: resolve(__dirname, 'src/request/index.ts'),
         getInitials: resolve(__dirname, 'src/getInitials/index.ts'),
         darkOrLight: resolve(__dirname, 'src/darkOrLight/index.ts'),
         str2Hex: resolve(__dirname, 'src/str2Hex/index.ts'),
@@ -22,7 +22,7 @@ export default defineConfig({
       },
       formats: ['es', 'cjs'], // Output both ES Modules and CommonJS
       // Function to customize the output file names based on format and entry name.
-      // This will result in files like `index.es.js`, `network.cjs.js`, etc.
+      // This will result in files like `index.es.js`, `request.cjs.js`, etc.
       fileName: (format, entryName) => `${entryName}.${format}.js`,
     },
     // Prevent bundling external dependencies.

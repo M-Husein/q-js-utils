@@ -1,6 +1,5 @@
-// src/network/request.test.ts
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { request, FetchError, AbortError } from './request'; // Adjust path if needed
+import { request, FetchError } from './index'; // , AbortError
 
 // Mock the global fetch function for testing network requests
 beforeEach(() => {

@@ -1,6 +1,6 @@
 {
   "name": "q-js-utils",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "A collection of JavaScript utilities.",
   "license": "MIT",
   "keywords": [
@@ -8,8 +8,7 @@
     "javascript",
     "typescript",
     "fetch",
-    "network",
-    "array",
+    "number",
     "string",
     "utils"
   ],
@@ -28,24 +27,44 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.es.js",
-      "require": "./dist/index.cjs.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs.js"
     },
-    "./network": {
-      "import": "./dist/network.es.js",
-      "require": "./dist/network.cjs.js",
-      "types": "./dist/network.d.ts"
+    "./number": {
+      "types": "./dist/number.d.ts",
+      "import": "./dist/number.es.js",
+      "require": "./dist/number.cjs.js"
     },
-    "./array": {
-      "import": "./dist/array.es.js",
-      "require": "./dist/array.cjs.js",
-      "types": "./dist/array.d.ts"
+    "./cached": {
+      "types": "./dist/cached.d.ts",
+      "import": "./dist/cached.es.js",
+      "require": "./dist/cached.cjs.js"
     },
-    "./string": {
-      "import": "./dist/string.es.js",
-      "require": "./dist/string.cjs.js",
-      "types": "./dist/string.d.ts"
+    "./request": {
+      "types": "./dist/request.d.ts",
+      "import": "./dist/request.es.js",
+      "require": "./dist/request.cjs.js"
+    },
+    "./getInitials": {
+      "types": "./dist/getInitials.d.ts",
+      "import": "./dist/getInitials.es.js",
+      "require": "./dist/getInitials.cjs.js"
+    },
+    "./darkOrLight": {
+      "types": "./dist/darkOrLight.d.ts",
+      "import": "./dist/darkOrLight.es.js",
+      "require": "./dist/darkOrLight.cjs.js"
+    },
+    "./str2Hex": {
+      "types": "./dist/str2Hex.d.ts",
+      "import": "./dist/str2Hex.es.js",
+      "require": "./dist/str2Hex.cjs.js"
+    },
+    "./obj2FormData": {
+      "types": "./dist/obj2FormData.d.ts",
+      "import": "./dist/obj2FormData.es.js",
+      "require": "./dist/obj2FormData.cjs.js"
     }
   },
   "files": [

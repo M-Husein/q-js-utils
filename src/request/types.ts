@@ -49,7 +49,8 @@ export type OnProgressCallback = (progress: DownloadProgress) => void;
  * @param options - The `RequestInit` object that will be passed to `fetch`.
  * @returns The (potentially modified) `RequestInit` object, or a Promise resolving to it.
  */
-export type BeforeHook = (url: string, options: RequestInit) => RequestInit | Promise<RequestInit>;
+export type BeforeHook = (options: RequestInit) => RequestInit | Promise<RequestInit>;
+// export type BeforeHook = (url: string, options: RequestInit) => RequestInit | Promise<RequestInit>;
 
 /**
  * Hook function executed after a response is received, but before its body is parsed.
@@ -59,7 +60,8 @@ export type BeforeHook = (url: string, options: RequestInit) => RequestInit | Pr
  * @param response - The raw `Response` object received from the fetch call.
  * @returns The (potentially modified) `Response` object, or a Promise resolving to it.
  */
-export type AfterHook = (url: string, options: RequestInit, response: Response) => Response | Promise<Response>;
+export type AfterHook = (response: Response, options: RequestInit) => Response | Promise<Response>;
+// export type AfterHook = (url: string, options: RequestInit, response: Response) => Response | Promise<Response>;
 
 /**
  * Interface for the object returned by the `request` function,
