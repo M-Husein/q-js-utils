@@ -1,0 +1,76 @@
+# .github/workflows/npm-publish.yml
+
+name: Publish to npm
+
+# Trigger this workflow when a push occurs on the 'main' branch.
+on:
+  push:
+    branches:
+      - main
+
+# Define environment variables that can be used across jobs/steps.
+env:
+  NODE_VERSION: '20.x' # Use a Node.js LTS version, e.g., '20.x' or 'lts/*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    # Set permissions for the GITHUB_TOKEN
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      # Step 1: Checkout the repository code.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Node.js environment.
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: 'https://registry.npmjs.org'
+
+      # Step 3: Install project dependencies.
+      - name: Install dependencies
+        run: npm ci
+
+      # Step 4: Run tests.
+      # This step is crucial. If 'npm run test' fails (returns a non-zero exit code),
+      # the workflow will stop here, and subsequent steps (build and publish) will not run.
+      - name: Run tests
+        run: npm run test
+
+      # Step 5: Run the build process.
+      # This step will only execute if the 'Run tests' step passed.
+      - name: Build library
+        run: npm run build
+
+      # Step 6: Check if the version already exists on npm (optional but recommended safety check)
+      - name: Check for existing npm version
+        id: check_version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          echo "Checking version $VERSION for $PACKAGE_NAME"
+          if npm view "$PACKAGE_NAME@$VERSION" >/dev/null 2>&1; then
+            echo "::set-output name=version_exists::true"
+            echo "Version $VERSION already exists on npm. Skipping publish."
+          else
+            echo "::set-output name=version_exists::false"
+            echo "Version $VERSION does not exist on npm. Proceeding with publish."
+          fi
+        shell: bash
+
+      # Step 7: Publish the package to npm.
+      # This step will only execute if all previous steps (including tests and build) passed,
+      # AND if the version doesn't already exist on npm.
+      - name: Publish to npm
+        if: steps.check_version.outputs.version_exists == 'false'
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # Ensure you have this secret set up in GitHub
+          

@@ -1,0 +1,70 @@
+{
+  "name": "q-js-utils",
+  "version": "1.0.0",
+  "description": "A collection of JavaScript utilities.",
+  "license": "MIT",
+  "keywords": [
+    "utility",
+    "javascript",
+    "typescript",
+    "fetch",
+    "network",
+    "array",
+    "string",
+    "utils"
+  ],
+  "author": "Muhamad Husein <m.husein27@gmail.com>",
+  "homepage": "https://github.com/M-Husein/q-js-utils#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/M-Husein/q-js-utils.git"
+  },
+  "bugs": {
+    "url": "https://github.com/M-Husein/q-js-utils/issues"
+  },
+  "type": "module",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.cjs.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./network": {
+      "import": "./dist/network.es.js",
+      "require": "./dist/network.cjs.js",
+      "types": "./dist/network.d.ts"
+    },
+    "./array": {
+      "import": "./dist/array.es.js",
+      "require": "./dist/array.cjs.js",
+      "types": "./dist/array.d.ts"
+    },
+    "./string": {
+      "import": "./dist/string.es.js",
+      "require": "./dist/string.cjs.js",
+      "types": "./dist/string.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "dev:example": "vite --config example/vite.config.ts",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.29",
+    "@vitest/coverage-v8": "^3.1.4",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^3.1.4"
+  }
+}

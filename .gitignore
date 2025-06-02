@@ -1,0 +1,69 @@
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Dependencies
+/node_modules
+/.pnpm-store
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+.history/ # VS Code Local History
+
+# Build artifacts
+/dist/
+/build/
+/out/
+*.tsbuildinfo
+
+# Vite-specific
+.vite/
+.vite-inspect/
+
+# Local .env files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# npm/yarn cache files
+.npm/
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.yml
+.yarnrc.yml # If you configure custom Yarn settings
+
+# Test/coverage reports
+/coverage/
+.nyc_output/
+*.lcov
+
+# OS generated files
+.Trash-*
+*.bak
+*.tmp
+*.swp
+*.swo
+
+# Common temporary files and archives
+*.zip
+*.tar
+*.tgz
+*.rar
+*.7z
+*.gz
+
+# npm package publishing
+.npmignore # If you use it, though 'files' in package.json is generally preferred now
