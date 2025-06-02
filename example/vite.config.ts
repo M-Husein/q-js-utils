@@ -20,13 +20,12 @@ export default defineConfig({
   // Vite might need a little help for module resolution.
   resolve: {
     alias: {
-      // Allows imports like `import { request } from 'your-lib/network';`
+      // Allows imports like `import { request } from 'your-lib/number';`
       // within the example app by mapping it to your source code.
       // Make sure 'your-lib' matches the name in your package.json
       'your-utility-library': resolve(__dirname, '../src'),
       // Or if you want to be more specific to individual modules:
-      // 'your-utility-library/network': resolve(__dirname, '../src/network'),
-      // 'your-utility-library/array': resolve(__dirname, '../src/array'),
+      // 'your-utility-library/number': resolve(__dirname, '../src/number'),
       // 'your-utility-library/string': resolve(__dirname, '../src/string'),
     },
   },

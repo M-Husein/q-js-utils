@@ -1,6 +1,6 @@
 export * from './number';
 export * from './cached';
-export * from './network/request';
+export * from './request';
 
 export * from './getInitials';
 export * from './darkOrLight';

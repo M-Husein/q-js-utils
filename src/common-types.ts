@@ -1,5 +1,7 @@
-// Re-exporting from network/types, or if network/types was consolidated here:
-export * from './network/request/types'; // Assuming network/types defines HttpMethod, RequestBody, QueryParams, DownloadProgress, OnProgressCallback, BeforeHook, AfterHook, ChainedFetchResponse, PerformanceFetchOptions
+// Re-exporting from request/types, or if request/types was consolidated here:
+// Assuming request/types defines HttpMethod, RequestBody, QueryParams, DownloadProgress, 
+// OnProgressCallback, BeforeHook, AfterHook, ChainedFetchResponse, PerformanceFetchOptions
+export * from './request/types';
 
 // Add any other common types here for your new utilities
 export type Primitive = string | number | boolean | symbol | bigint | undefined | null;

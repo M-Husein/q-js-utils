@@ -2,7 +2,7 @@ This setup will involve:
 
 Modular Source Structure: Organizing utilities into distinct files/folders.
 Vite Multi-Entry Build: Configuring Vite to output separate bundles for each utility or module, alongside a main bundle.
-package.json Exports: Defining the modern exports field to allow consumers to import specific utilities (e.g., import { request } from 'your-lib/network';) or the whole library (import { request } from 'your-lib';).
+package.json Exports: Defining the modern exports field to allow consumers to import specific utilities (e.g., import { request } from 'your-lib/number';) or the whole library (import { request } from 'your-lib';).
 Updated Dependencies: Ensuring Vite and vite-plugin-dts are up-to-date.
 JSDoc: (Already done in previous steps, but good to keep in mind for new utilities).
 
@@ -14,10 +14,10 @@ your-utility-library/
 ├── src/
 │   ├── index.ts                     // Main entry: re-exports everything for convenience
 │   │
-│   ├── network/                     // Category for network-related utilities
-│   │   ├── index.ts                 // Entry for network/ (re-exports request)
+│   ├── number/                     // Category for number-related utilities
+│   │   ├── index.ts                 // Entry for number/ (re-exports request)
 │   │   ├── request.ts               // Your request function
-│   │   └── types.ts                 // Types specific to network (can be moved to common types if preferred)
+│   │   └── types.ts                 // Types specific to number (can be moved to common types if preferred)
 │   │
 │   ├── array/                       // Category for array utilities
 │   │   ├── index.ts                 // Entry for array/ (re-exports chunk, uniq)
@@ -44,8 +44,8 @@ src/common-types.ts (New or refactored existing types.ts)
 ```ts
 // src/common-types.ts
 
-// Re-exporting from network/types, or if network/types was consolidated here:
-export * from './network/types'; // Assuming network/types defines HttpMethod, RequestBody, QueryParams, DownloadProgress, OnProgressCallback, BeforeHook, AfterHook, ChainedFetchResponse, PerformanceFetchOptions
+// Re-exporting from number/types, or if number/types was consolidated here:
+export * from './number/types'; // Assuming number/types defines HttpMethod, RequestBody, QueryParams, DownloadProgress, OnProgressCallback, BeforeHook, AfterHook, ChainedFetchResponse, PerformanceFetchOptions
 
 // Add any other common types here for your new utilities
 export type Primitive = string | number | boolean | symbol | bigint | undefined | null;
@@ -56,10 +56,10 @@ export interface KeyValuePair<K = string, V = any> {
 }
 ```
 
-src/network/index.ts (New)
+src/number/index.ts (New)
 
 ```ts
-// src/network/index.ts
+// src/number/index.ts
 
 export * from './request';
 export * from './types'; // If you want to export types specifically from this entry
@@ -107,8 +107,8 @@ src/index.ts (Main Library Entry)
 // This allows consumers to import everything from the main package:
 // `import { request, chunk, capitalize } from 'your-library-name';`
 
-// Re-export all from network module
-export * from './network';
+// Re-export all from number module
+export * from './number';
 
 // Re-export all from array module
 export * from './array';
@@ -135,11 +135,11 @@ export default defineConfig({
   build: {
     lib: {
       // Define multiple entry points.
-      // The key of each entry will determine the output filename prefix (e.g., 'index', 'network', 'array').
+      // The key of each entry will determine the output filename prefix (e.g., 'index', 'number', 'array').
       // The value is the path to the source file for that entry.
       entry: {
         index: resolve(__dirname, 'src/index.ts'),       // Main bundle: your-library-name
-        network: resolve(__dirname, 'src/network/index.ts'), // Network utilities module
+        number: resolve(__dirname, 'src/number/index.ts'), // Number utilities module
         array: resolve(__dirname, 'src/array/index.ts'),     // Array utilities module
         string: resolve(__dirname, 'src/string/index.ts'),   // String utilities module
         // Add more entries as you create new utility categories or standalone functions.
@@ -147,7 +147,7 @@ export default defineConfig({
       },
       formats: ['es', 'cjs'], // Output both ES Modules and CommonJS
       // Function to customize the output file names based on format and entry name.
-      // This will result in files like `index.es.js`, `network.cjs.js`, etc.
+      // This will result in files like `index.es.js`, `number.cjs.js`, etc.
       fileName: (format, entryName) => `${entryName}.${format}.js`,
     },
     // Prevent bundling external dependencies.
@@ -188,7 +188,7 @@ This configuration remains largely the same, optimized for modern TypeScript and
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "lib": ["ESNext", "DOM"], // DOM is important if your network utilities interact with browser APIs
+    "lib": ["ESNext", "DOM"], // DOM is important if your number utilities interact with browser APIs
     "declaration": true,
     "declarationDir": "./dist",
     "emitDeclarationOnly": false,
@@ -220,7 +220,7 @@ The exports field is crucial here. It allows you to define how consumers can imp
   "description": "A performance-oriented utility library for modern JavaScript/TypeScript applications.",
   "license": "MIT",
   "keywords": [
-    "utility", "javascript", "typescript", "fetch", "network", "array", "string", "utils", "lodash-like"
+    "utility", "javascript", "typescript", "fetch", "number", "array", "string", "utils", "lodash-like"
   ],
   "author": "Your Name <your.email@example.com>",
   "homepage": "https://github.com/your-username/your-utility-library#readme",
@@ -242,10 +242,10 @@ The exports field is crucial here. It allows you to define how consumers can imp
       "types": "./dist/index.d.ts"          // For TypeScript type resolution
     },
     // Expose specific modules for tree-shaking (subpath exports)
-    "./network": {
-      "import": "./dist/network.es.js",
-      "require": "./dist/network.cjs.js",
-      "types": "./dist/network.d.ts"
+    "./number": {
+      "import": "./dist/number.es.js",
+      "require": "./dist/number.cjs.js",
+      "types": "./dist/number.d.ts"
     },
     "./array": {
       "import": "./dist/array.es.js",
@@ -289,9 +289,12 @@ import { request, chunk, capitalize } from 'your-utility-library';
 For specific modules (recommended for tree-shaking):
 
 ```ts
-import { request } from 'your-utility-library/network';
+import { request } from 'your-utility-library/request';
 import { chunk } from 'your-utility-library/array';
 import { capitalize } from 'your-utility-library/string';
 ```
 
 This setup provides a robust foundation for your utility library, making it easy to develop, build, and consume in a modern, tree-shakable way.
+
+//
+

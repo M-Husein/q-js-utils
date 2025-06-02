@@ -1,0 +1,55 @@
+# .github/workflows/npm-publish.yml
+
+name: Release npm package
+
+# This workflow will be triggered when code is pushed (e.g., merged from a PR) into the 'main' branch.
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed for release-it to push version bump, create tags, and GitHub releases
+      packages: write # Needed for publishing to npm
+      id-token: write # Recommended for OIDC / provenance (modern security features)
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # This is critical for release-it to access full Git history for changelog generation,
+          # and to be able to push commits/tags using the GITHUB_TOKEN.
+          fetch-depth: 0
+
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          # Configure npm for publishing; this will use NODE_AUTH_TOKEN
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm run test # This step will fail the workflow if tests don't pass
+
+      # This single step now orchestrates the entire release process.
+      # It will:
+      # 1. Run 'npm run build' (via the 'before:init' hook in .release-it.json)
+      # 2. Determine the next version based on commit messages.
+      # 3. Update package.json, commit, and tag.
+      # 4. Push the new commit and tag to GitHub.
+      # 5. Create a GitHub Release with generated notes.
+      # 6. Publish the package to npm.
+      - name: Run Release It
+        run: npm run release
+        env:
+          # GITHUB_TOKEN is an automatically provided token by GitHub Actions with write permissions
+          # needed by release-it to push commits/tags and create GitHub releases.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # NPM_TOKEN is your granular access token for npm, stored as a repository secret.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

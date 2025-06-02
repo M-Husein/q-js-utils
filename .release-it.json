@@ -1,0 +1,48 @@
+{
+  "git": {
+    "requireBranch": "main",
+    "commitMessage": "chore(release): Release v${version} [skip ci]",
+    "tagName": "v${version}"
+  },
+  "npm": {
+    "publish": true,
+    "access": "public"
+  },
+  "github": {
+    "release": true,
+    "releaseName": "Release v${version}",
+    "tokenRef": "NPM_TOKEN_Q_JS_UTILS"
+  },
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "preset": "angular",
+      "infile": "CHANGELOG.md"
+    }
+  },
+  "hooks": {
+    "before:init": ["npm run build"],
+    "after:release": "echo Successfully released v${version}!"
+  },
+  "ci": {
+    "true": {
+      "npm": {
+        "publish": true
+      },
+      "git": {
+        "tag": true,
+        "push": true
+      },
+      "github": {
+        "release": true
+      },
+      "prompt": {
+        "ghRelease": false,
+        "npmPublish": false
+      }
+    }
+  },
+  "prompt": {
+    "ghRelease": false,
+    "npmPublish": false
+  }
+}

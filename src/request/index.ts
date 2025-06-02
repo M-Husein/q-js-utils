@@ -1,21 +1,8 @@
-// A performance-oriented utility library for modern JavaScript/TypeScript applications.
-
-import {
-  // RequestBody,
-  // QueryParams,
-  // DownloadProgress,
-  // OnProgressCallback,
-  // BeforeHook,
-  // AfterHook,
-  PerformanceFetchOptions,
-  ChainedFetchResponse,
-} from './types';
+import { PerformanceFetchOptions, ChainedFetchResponse } from './types';
 import { appendQueryParams, processRequestBody, mergeHeaders, handleProgress } from './utils';
 
-// If you want to export types specifically from this entry
-export * from './types';
-
-// --- Custom Error Classes ---
+// If want to export types specifically from this entry
+// export * from './types';
 
 /**
  * Custom error class for non-2xx HTTP responses (e.g., 404, 500).
@@ -47,6 +34,7 @@ export class FetchError extends Error {
 }
 
 /**
+ * @DEV : Option
  * Custom error class for aborted requests, which can happen due to a timeout
  * or if the request was manually aborted via an `AbortController`.
  */
@@ -62,8 +50,6 @@ export class AbortError extends Error {
     Object.setPrototypeOf(this, AbortError.prototype);
   }
 }
-
-// --- Fetch Response Wrapper Class ---
 
 /**
  * A wrapper around `Promise<Response>` that provides convenient chained methods
@@ -134,8 +120,6 @@ class FetchResponse implements ChainedFetchResponse {
   }
 }
 
-// --- Main Fetch Wrapper Function ---
-
 /**
  * Performs an HTTP request with extended features, optimized for performance.
  * It provides custom error handling, request timeout, download progress tracking,
@@ -177,19 +161,18 @@ export function request(
   // The core fetch logic is wrapped in an immediately invoked async function
   // which returns a Promise<Response>. This promise is then wrapped by FetchResponse.
   const coreFetchPromise = (async (): Promise<Response> => {
-    let effectiveUrl = url;
-    // Create a shallow copy of options. `body` is explicitly handled separately.
-    let requestInit: Omit<RequestInit, 'body'> = { ...options }; // Using spread for clarity
-
-    // Apply specific headers provided in the call (no global headers merge)
-    requestInit.headers = mergeHeaders(headers);
-
-    // Process the request body (e.g., JSON.stringify, FormData handling)
-    // and set the appropriate Content-Type header. Mutates `requestInit`.
-    processRequestBody(requestInit, body);
+    // Create new objects instead of mutating
+    let finalOptions: Omit<RequestInit, 'body'> = {
+      ...options,
+      headers: mergeHeaders(headers), // New headers object
+    };
 
     // Append query parameters to the URL string
-    effectiveUrl = appendQueryParams(effectiveUrl, query);
+    let finalUrl: string = appendQueryParams(url, query);
+
+    // Process the request body (e.g., JSON.stringify, FormData handling)
+    // and set the appropriate Content-Type header. Mutates `finalOptions`.
+    processRequestBody(finalOptions, body);
 
     // Setup AbortController for handling timeouts and external aborts:
     const controller = externalSignal ? null : new AbortController();
@@ -200,16 +183,21 @@ export function request(
       : null;
 
     // Use the provided external signal if available, otherwise use the internally created signal.
-    requestInit.signal = externalSignal || controller?.signal;
+    finalOptions.signal = externalSignal || controller?.signal;
 
-    // Execute Before Hook if defined. It can modify `requestInit`.
+    // Execute Before Hook if defined. It can modify `finalOptions`.
     if (beforeHook) {
-      requestInit = await beforeHook(effectiveUrl, requestInit);
+      /**
+       * @DEV :
+       * Next release may only await `beforeHook(finalOptions)`,
+       * which will directly change the finalOptions data in beforeHook call.
+       */
+      finalOptions = await beforeHook(finalOptions);
     }
 
     let response: Response;
     try {
-      response = await fetch(effectiveUrl, requestInit);
+      response = await fetch(finalUrl, finalOptions);
 
       // Handle Download Progress if a callback is provided and Content-Length header exists.
       // The response body is wrapped in a new stream to enable progress tracking.
@@ -219,9 +207,12 @@ export function request(
 
       // Execute After Hook if defined. It can modify the `response` object.
       if (afterHook) {
-        response = await afterHook(effectiveUrl, requestInit, response);
+        response = await afterHook(response, finalOptions);
       }
 
+      /**
+       * @DEV : Maybe bot use FetchError class, only using new Error().
+       */
       // Handle Non-OK HTTP Responses (e.g., 404, 500).
       // Throw a `FetchError` with the original `Response` object for detailed handling by the consumer.
       if (!response.ok) {
@@ -235,17 +226,17 @@ export function request(
       // Ensure timeout is cleared regardless of success or error path
       if (timeoutId) clearTimeout(timeoutId);
 
+      /** @DEV : Option */
       // Identify and re-throw AbortErrors (from timeout or manual abort) as `AbortError`.
-      if (error instanceof DOMException && error.name === 'AbortError') {
-        throw new AbortError('Request aborted by user or timeout.', error);
-      }
+      // if (error instanceof DOMException && error.name === 'AbortError') {
+      //   throw new AbortError('Request aborted by user or timeout.', error);
+      // }
+
       // Re-throw all other errors (e.g., network connectivity issues, CORS errors).
       throw error;
     } finally {
       // Always clear the timeout if it was set to prevent memory leaks.
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
+      if (timeoutId) clearTimeout(timeoutId);
     }
   })();
 

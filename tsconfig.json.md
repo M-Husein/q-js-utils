@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "lib": ["ESNext", "DOM"], // DOM is important if your network utilities interact with browser APIs
+    "lib": ["ESNext", "DOM"], // DOM is important if your number utilities interact with browser APIs
     "declaration": true,
     "declarationDir": "./dist",
     "emitDeclarationOnly": false,

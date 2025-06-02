@@ -1,8 +1,4 @@
-// src/example.ts (for testing the simplified `request` API)
-
-import { request, AbortError, FetchError } from './index'; // No http or configureFetch imports
-
-// --- Examples ---
+import { request, FetchError } from './index'; // , AbortError
 
 async function runExamples() {
   console.log('--- Starting Simplified Request API Examples ---');
@@ -14,9 +10,11 @@ async function runExamples() {
   } catch (error) {
     if (error instanceof FetchError) {
       console.error('1. Basic GET (FetchError):', error.status, error.originalResponse.url);
-    } else if (error instanceof AbortError) {
-      console.error('1. Basic GET (AbortError):', error.message);
-    } else {
+    } 
+    // else if (error instanceof AbortError) {
+    //   console.error('1. Basic GET (AbortError):', error.message);
+    // } 
+    else {
       console.error('1. Basic GET (Other Error):', error);
     }
   }
@@ -57,16 +55,16 @@ async function runExamples() {
       onProgress: (progress) => {
         if (progress.total) {
           console.log(
-            `   Progress: ${progress.loaded} / ${progress.total} bytes (${(
+            `Progress: ${progress.loaded} / ${progress.total} bytes (${(
               progress.progress! * 100
             ).toFixed(2)}%)`,
           );
         } else {
-          console.log(`   Progress: ${progress.loaded} bytes loaded (total unknown)`);
+          console.log(`Progress: ${progress.loaded} bytes loaded (total unknown)`);
         }
       },
     }).blob();
-    console.log('   Download complete. Blob size:', blob.size, 'bytes');
+    console.log('Download complete. Blob size:', blob.size, 'bytes');
   } catch (error) {
     console.error('4. Download Progress Error:', error);
   }
@@ -77,11 +75,13 @@ async function runExamples() {
     await request('https://httpbin.org/delay/2', { timeout: 100 }).json();
     console.log('   Timeout test succeeded (unexpected)');
   } catch (error) {
-    if (error instanceof AbortError) {
-      console.error('   Timeout Error:', error.message);
-    } else {
-      console.error('   Other Error during timeout test:', error);
-    }
+    // if (error instanceof AbortError) {
+    //   console.error('Timeout Error:', error.message);
+    // } else {
+    //   console.error('Other Error during timeout test:', error);
+    // }
+
+    console.error('Other Error during timeout test:', error);
   }
 
   // 6. Abort request manually
@@ -89,18 +89,20 @@ async function runExamples() {
   const abortController = new AbortController();
   const abortTimeout = setTimeout(() => {
     abortController.abort();
-    console.log('   Manual abort triggered!');
+    console.log('Manual abort triggered!');
   }, 50);
 
   try {
     await request('https://httpbin.org/delay/2', { signal: abortController.signal }).json();
-    console.log('   Manual abort test succeeded (unexpected)');
+    console.log('Manual abort test succeeded (unexpected)');
   } catch (error) {
-    if (error instanceof AbortError) {
-      console.error('   Manual Abort Error:', error.message);
-    } else {
-      console.error('   Other Error during manual abort test:', error);
-    }
+    // if (error instanceof AbortError) {
+    //   console.error('Manual Abort Error:', error.message);
+    // } 
+    // else {
+    //   console.error('Other Error during manual abort test:', error);
+    // }
+    console.error('Other Error during manual abort test:', error);
   } finally {
     clearTimeout(abortTimeout);
   }
@@ -111,16 +113,16 @@ async function runExamples() {
     await request('https://jsonplaceholder.typicode.com/non-existent-path-12345').json();
   } catch (error) {
     if (error instanceof FetchError) {
-      console.error(`   FetchError: ${error.message}`);
-      console.error(`   Status: ${error.status}`);
+      console.error(`FetchError: ${error.message}`);
+      console.error(`Status: ${error.status}`);
       try {
         const errorBody = await error.originalResponse.text();
-        console.error('   Error Body:', errorBody.substring(0, 100) + '...');
+        console.error('Error Body:', errorBody.substring(0, 100) + '...');
       } catch (parseError) {
-        console.error('   Failed to parse 404 error body:', parseError);
+        console.error('Failed to parse 404 error body:', parseError);
       }
     } else {
-      console.error('   Other Error:', error);
+      console.error('Other Error:', error);
     }
   }
 
@@ -128,12 +130,12 @@ async function runExamples() {
   console.log('8. Error during JSON parsing (invalid JSON from server for 200 OK)');
   try {
     const validResponse = await request('https://jsonplaceholder.typicode.com/todos/1').json();
-    console.log('   Valid JSON parsed successfully:', validResponse.title);
+    console.log('Valid JSON parsed successfully:', validResponse.title);
   } catch (error) {
     if (error instanceof SyntaxError) {
-      console.error('   SyntaxError during JSON parsing (from .json() call):', error.message);
+      console.error('SyntaxError during JSON parsing (from .json() call):', error.message);
     } else {
-      console.error('   Other Error during parsing test:', error);
+      console.error('Other Error during parsing test:', error);
     }
   }
 
@@ -141,16 +143,24 @@ async function runExamples() {
   console.log('9. Using before and after hooks for a specific request');
   try {
     const response = await request('https://jsonplaceholder.typicode.com/comments/1', {
-      beforeHook: async (url, options) => {
-        console.log(`   [Specific Before Hook] Preparing request for ${url}`);
+      beforeHook: async (options) => {
+        // console.log(`[Specific Before Hook] Preparing request`);
+        // let token = await getToken();
+        // if (token) {
+        //   request.headers.set('Authorization', 'Bearer ' + token);
+        // }
         return options;
       },
-      afterHook: async (url, options, res) => {
-        console.log(`   [Specific After Hook] Received response for ${url} with status ${res.status}`);
-        return res;
+      afterHook: async (response, options) => {
+        // console.log(`[Specific After Hook] Received response with status ${response.status}`);
+        if (response.status === 401) {
+          // Handle token refresh logic here
+          console.warn('Token expired, refreshing...');
+        }
+        return response;
       }
     }).json();
-    console.log('   Hooked request data:', response.name);
+    console.log('Hooked request data:', response.name);
   } catch (error) {
     console.error('9. Hooked request error:', error);
   }
