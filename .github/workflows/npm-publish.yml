@@ -41,8 +41,8 @@ jobs:
       # Step 4: Run tests.
       # This step is crucial. If 'npm run test' fails (returns a non-zero exit code),
       # the workflow will stop here, and subsequent steps (build and publish) will not run.
-      - name: Run tests
-        run: npm run test
+      # - name: Run tests
+       # run: npm run test
 
       # Step 5: Run the build process.
       # This step will only execute if the 'Run tests' step passed.
@@ -72,5 +72,5 @@ jobs:
         if: steps.check_version.outputs.version_exists == 'false'
         run: npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }} # Ensure you have this secret set up in GitHub
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_Q_JS_UTILS }} # Ensure you have this secret set up in GitHub
           

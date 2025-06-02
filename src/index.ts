@@ -1,3 +1,4 @@
+export * from './number';
 export * from './cached';
 export * from './network/request';
 
