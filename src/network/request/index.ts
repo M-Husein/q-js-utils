@@ -1,21 +1,8 @@
-// A performance-oriented utility library for modern JavaScript/TypeScript applications.
-
-import {
-  // RequestBody,
-  // QueryParams,
-  // DownloadProgress,
-  // OnProgressCallback,
-  // BeforeHook,
-  // AfterHook,
-  PerformanceFetchOptions,
-  ChainedFetchResponse,
-} from './types';
+import { PerformanceFetchOptions, ChainedFetchResponse } from './types';
 import { appendQueryParams, processRequestBody, mergeHeaders, handleProgress } from './utils';
 
 // If you want to export types specifically from this entry
-export * from './types';
-
-// --- Custom Error Classes ---
+// export * from './types';
 
 /**
  * Custom error class for non-2xx HTTP responses (e.g., 404, 500).
@@ -62,8 +49,6 @@ export class AbortError extends Error {
     Object.setPrototypeOf(this, AbortError.prototype);
   }
 }
-
-// --- Fetch Response Wrapper Class ---
 
 /**
  * A wrapper around `Promise<Response>` that provides convenient chained methods
@@ -134,8 +119,6 @@ class FetchResponse implements ChainedFetchResponse {
   }
 }
 
-// --- Main Fetch Wrapper Function ---
-
 /**
  * Performs an HTTP request with extended features, optimized for performance.
  * It provides custom error handling, request timeout, download progress tracking,
@@ -177,7 +160,9 @@ export function request(
   // The core fetch logic is wrapped in an immediately invoked async function
   // which returns a Promise<Response>. This promise is then wrapped by FetchResponse.
   const coreFetchPromise = (async (): Promise<Response> => {
-    let effectiveUrl = url;
+    // Append query parameters to the URL string
+    let effectiveUrl = appendQueryParams(url, query); // url;
+
     // Create a shallow copy of options. `body` is explicitly handled separately.
     let requestInit: Omit<RequestInit, 'body'> = { ...options }; // Using spread for clarity
 
@@ -189,7 +174,7 @@ export function request(
     processRequestBody(requestInit, body);
 
     // Append query parameters to the URL string
-    effectiveUrl = appendQueryParams(effectiveUrl, query);
+    // effectiveUrl = appendQueryParams(effectiveUrl, query);
 
     // Setup AbortController for handling timeouts and external aborts:
     const controller = externalSignal ? null : new AbortController();
@@ -239,6 +224,7 @@ export function request(
       if (error instanceof DOMException && error.name === 'AbortError') {
         throw new AbortError('Request aborted by user or timeout.', error);
       }
+
       // Re-throw all other errors (e.g., network connectivity issues, CORS errors).
       throw error;
     } finally {

@@ -57,7 +57,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "release": "release-it"
   },
   "devDependencies": {
     "@types/node": "^22.15.29",
