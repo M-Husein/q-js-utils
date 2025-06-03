@@ -44,12 +44,12 @@ export default defineConfig({
       format: {
         comments: false, // Removes comments
       },
-      output: {
-        // This is the key setting to remove all comments from the output
-        comments: false,
-        // You can specify a regex to keep certain comments (e.g., license comments starting with /*!)
-        // comments: /^\/*!/i, // Example: Keeps comments starting with /*!
-      },
+      // output: {
+      //   // This is the key setting to remove all comments from the output
+      //   comments: false,
+      //   // You can specify a regex to keep certain comments (e.g., license comments starting with /*!)
+      //   // comments: /^\/*!/i, // Example: Keeps comments starting with /*!
+      // },
     },
     // Prevent bundling external dependencies.
     // List any npm packages that your library *uses* but expects the consumer to *install*.
