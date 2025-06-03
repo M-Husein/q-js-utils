@@ -27,7 +27,7 @@
     "url": "https://github.com/M-Husein/q-js-utils/issues"
   },
   "type": "module",
-  "main": "./dist/index.umd.js",
+  "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -51,10 +51,10 @@
       "import": "./dist/request.es.js",
       "require": "./dist/request.cjs.js"
     },
-    "./incrementId": {
-      "types": "./dist/incrementId.d.ts",
-      "import": "./dist/incrementId.es.js",
-      "require": "./dist/incrementId.cjs.js"
+    "./nextId": {
+      "types": "./dist/nextId.d.ts",
+      "import": "./dist/nextId.es.js",
+      "require": "./dist/nextId.cjs.js"
     },
     "./getInitials": {
       "types": "./dist/getInitials.d.ts",

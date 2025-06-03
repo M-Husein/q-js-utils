@@ -2,7 +2,7 @@
 import { request } from '../src/request';
 import requestExamples from '../src/request/example';
 
-import { incrementId } from '../src/incrementId';
+import { nextId } from '../src/nextId';
 import { asyncSimulation } from '../src/asyncSimulation';
 import { str2Hex } from '../src/str2Hex';
 import { getInitials } from '../src/getInitials';
@@ -65,11 +65,11 @@ async function runExamples() {
     console.log(`%c${name2} initial is ${initial2}`, 'font-size:21px');
     console.log(`%c${name3} initial is ${initial3}`, 'font-size:21px');
 
-    // Test incrementId function
-    console.group('incrementId');
-    console.log(`%cincrementId to ${incrementId()}`, 'font-size:21px');
-    console.log(`%cincrementId to ${incrementId()}`, 'font-size:21px');
-    console.log(`%cincrementId to ${incrementId('x')}`, 'font-size:21px');
+    // Test nextId function
+    console.group('nextId');
+    console.log(`%cnextId to ${nextId()}`, 'font-size:21px');
+    console.log(`%cnextId to ${nextId()}`, 'font-size:21px');
+    console.log(`%cnextId to ${nextId('x')}`, 'font-size:21px');
     console.groupEnd();
 
     // Test asyncSimulation function

@@ -13,7 +13,7 @@ export default defineConfig({
         number: resolve(__dirname, 'src/number/index.ts'),
         cached: resolve(__dirname, 'src/cached/index.ts'),
         request: resolve(__dirname, 'src/request/index.ts'),
-        incrementId: resolve(__dirname, 'src/incrementId/index.ts'),
+        nextId: resolve(__dirname, 'src/nextId/index.ts'),
         getInitials: resolve(__dirname, 'src/getInitials/index.ts'),
         darkOrLight: resolve(__dirname, 'src/darkOrLight/index.ts'),
         str2Hex: resolve(__dirname, 'src/str2Hex/index.ts'),
@@ -21,7 +21,9 @@ export default defineConfig({
         // Add more entries as you create new utility categories or standalone functions.
         // E.g., 'object': resolve(__dirname, 'src/object/index.ts')
       },
-      formats: ['es', 'cjs', 'umd', 'iife'], // Output both ES Modules and CommonJS
+
+      // formats: ['es', 'cjs', 'umd', 'iife'],
+      formats: ['es', 'cjs'], // Output both ES Modules and CommonJS
       // Function to customize the output file names based on format and entry name.
       // This will result in files like `index.es.js`, `request.cjs.js`, etc.
       fileName: (format, entryName) => `${entryName}.${format}.js`,
