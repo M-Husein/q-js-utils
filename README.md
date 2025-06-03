@@ -65,14 +65,15 @@ try {
 }
 ```
 
-### incrementId
+### nextId
+Generates a unique, sequentially incremented string ID with an optional prefix. Each call increments an internal counter to ensure uniqueness.
 
 ```js
-import { incrementId } from '../src/incrementId';
+import { nextId } from '../src/nextId';
 
-console.log(`incrementId to ${incrementId()}`);
-console.log(`incrementId to ${incrementId()}`);
-console.log(`incrementId to ${incrementId('x')}`);
+console.log(`nextId to ${nextId()}`);
+console.log(`nextId to ${nextId()}`);
+console.log(`nextId to ${nextId('x')}`);
 ```
 
 ### cached
