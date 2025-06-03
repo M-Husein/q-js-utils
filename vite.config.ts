@@ -13,6 +13,7 @@ export default defineConfig({
         number: resolve(__dirname, 'src/number/index.ts'),
         cached: resolve(__dirname, 'src/cached/index.ts'),
         request: resolve(__dirname, 'src/request/index.ts'),
+        incrementId: resolve(__dirname, 'src/incrementId/index.ts'),
         getInitials: resolve(__dirname, 'src/getInitials/index.ts'),
         darkOrLight: resolve(__dirname, 'src/darkOrLight/index.ts'),
         str2Hex: resolve(__dirname, 'src/str2Hex/index.ts'),
@@ -20,20 +21,44 @@ export default defineConfig({
         // Add more entries as you create new utility categories or standalone functions.
         // E.g., 'object': resolve(__dirname, 'src/object/index.ts')
       },
-      formats: ['es', 'cjs'], // Output both ES Modules and CommonJS
+      formats: ['es', 'cjs', 'umd', 'iife'], // Output both ES Modules and CommonJS
       // Function to customize the output file names based on format and entry name.
       // This will result in files like `index.es.js`, `request.cjs.js`, etc.
       fileName: (format, entryName) => `${entryName}.${format}.js`,
+    },
+    // outDir: 'dist',
+    // sourcemap: true, // Keep sourcemaps for easier debugging of production issues
+    // 
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        // drop_console: true, // Optional: Remove console.log statements
+        drop_debugger: true, // Optional: Remove debugger statements
+        arrows: true,       // Converts functions to arrow functions
+        comparisons: true,  // Optimizes `typeof` checks, if false will Disables '==' optimization
+        conditionals: true, // Flattens nested ternaries
+        toplevel: true,     // Minifies top-level functions
+      },
+      format: {
+        comments: false, // Removes comments
+      },
+      output: {
+        // This is the key setting to remove all comments from the output
+        comments: false,
+        // You can specify a regex to keep certain comments (e.g., license comments starting with /*!)
+        // comments: /^\/*!/i, // Example: Keeps comments starting with /*!
+      },
     },
     // Prevent bundling external dependencies.
     // List any npm packages that your library *uses* but expects the consumer to *install*.
     rollupOptions: {
       external: [], // Example: if you use 'lodash', add 'lodash' here.
       output: {
-        // You can set specific global names for UMD builds if needed, but for 'es'/'cjs' it's less critical.
-        globals: {
-          // 'lodash': 'lodash' // Example
-        },
+        // Provide global variables to use in the UMD build for externalized deps.
+        // If you had external dependencies (e.g., 'lodash'), you'd map them here:
+        // globals: {
+        //   lodash: 'lodash',
+        // },
       },
     },
     // Clear the output directory before building to ensure a clean build.
@@ -47,7 +72,7 @@ export default defineConfig({
       outDir: 'dist',   // Output directory for declaration files
       tsconfigPath: './tsconfig.json', // Path to your tsconfig file
       // If you want all types rolled into a single .d.ts file for convenience, uncomment:
-      // rollupTypes: true, // This will create a single `index.d.ts` that contains types for all modules
+      rollupTypes: true, // This will create a single `index.d.ts` that contains types for all modules
       // typedir: 'dist/types' // If rollupTypes: true, specify a sub-directory for the single file
       // For a modular library, having individual .d.ts files often works better with `exports` field
     }),

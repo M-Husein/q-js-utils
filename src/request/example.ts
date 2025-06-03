@@ -1,6 +1,6 @@
-import { request, FetchError } from './index'; // , AbortError
+import { request } from './index'; // FetchError, AbortError
 
-async function runExamples() {
+export default async function runExamples() {
   console.log('--- Starting Simplified Request API Examples ---');
 
   // 1. Basic GET request (defaults to GET)
@@ -8,15 +8,16 @@ async function runExamples() {
     const data = await request('https://jsonplaceholder.typicode.com/todos/1').json();
     console.log('1. Basic GET (title):', data.title);
   } catch (error) {
-    if (error instanceof FetchError) {
-      console.error('1. Basic GET (FetchError):', error.status, error.originalResponse.url);
-    } 
+    // if (error instanceof FetchError) {
+    //   console.error('1. Basic GET (FetchError):', error.status, error.originalResponse.url);
+    // } 
     // else if (error instanceof AbortError) {
     //   console.error('1. Basic GET (AbortError):', error.message);
     // } 
-    else {
-      console.error('1. Basic GET (Other Error):', error);
-    }
+    // else {
+    //   console.error('1. Basic GET (Other Error):', error);
+    // }
+    console.error('1. Basic GET (Error):', error);
   }
 
   // 2. GET with query parameters
@@ -112,18 +113,19 @@ async function runExamples() {
   try {
     await request('https://jsonplaceholder.typicode.com/non-existent-path-12345').json();
   } catch (error) {
-    if (error instanceof FetchError) {
-      console.error(`FetchError: ${error.message}`);
-      console.error(`Status: ${error.status}`);
-      try {
-        const errorBody = await error.originalResponse.text();
-        console.error('Error Body:', errorBody.substring(0, 100) + '...');
-      } catch (parseError) {
-        console.error('Failed to parse 404 error body:', parseError);
-      }
-    } else {
-      console.error('Other Error:', error);
-    }
+    // if (error instanceof FetchError) {
+    //   console.error(`FetchError: ${error.message}`);
+    //   console.error(`Status: ${error.status}`);
+    //   try {
+    //     const errorBody = await error.originalResponse.text();
+    //     console.error('Error Body:', errorBody.substring(0, 100) + '...');
+    //   } catch (parseError) {
+    //     console.error('Failed to parse 404 error body:', parseError);
+    //   }
+    // } else {
+    //   console.error('Other Error:', error);
+    // }
+    console.error('Error:', error);
   }
 
   // 8. Error during JSON parsing (invalid JSON from server for 200 OK)
@@ -143,16 +145,21 @@ async function runExamples() {
   console.log('9. Using before and after hooks for a specific request');
   try {
     const response = await request('https://jsonplaceholder.typicode.com/comments/1', {
-      beforeHook: async (options) => {
-        // console.log(`[Specific Before Hook] Preparing request`);
+      beforeHook: async (requestOptions: any) => {
+        console.log(`[Specific Before Hook] Preparing request: `, requestOptions);
         // let token = await getToken();
         // if (token) {
-        //   request.headers.set('Authorization', 'Bearer ' + token);
+        //   requestOptions.headers.set('Authorization', 'Bearer ' + token);
         // }
-        return options;
+        // return requestOptions;
+
+        // requestOptions.headers.Authorization = 'Bearer';
+        // (requestOptions.headers as Record<string, string>).Authorization = 'Bearer';
+        requestOptions.headers.set('Authorization', 'Bearer ');
       },
-      afterHook: async (response, options) => {
-        // console.log(`[Specific After Hook] Received response with status ${response.status}`);
+      afterHook: async (response) => { // , options
+        console.log(`[Specific After Hook] Received response with status ${response.status}`);
+
         if (response.status === 401) {
           // Handle token refresh logic here
           console.warn('Token expired, refreshing...');
@@ -160,10 +167,11 @@ async function runExamples() {
         return response;
       }
     }).json();
+    
     console.log('Hooked request data:', response.name);
   } catch (error) {
     console.error('9. Hooked request error:', error);
   }
 }
 
-runExamples();
+// runExamples();

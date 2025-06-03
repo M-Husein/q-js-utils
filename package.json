@@ -1,16 +1,21 @@
 {
   "name": "q-js-utils",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "A collection of JavaScript utilities.",
   "license": "MIT",
   "keywords": [
+    "utilities",
     "utility",
+    "utils",
+    "simple",
     "javascript",
     "typescript",
     "fetch",
     "number",
     "string",
-    "utils"
+    "object",
+    "collection",
+    "cached"
   ],
   "author": "Muhamad Husein <m.husein27@gmail.com>",
   "homepage": "https://github.com/M-Husein/q-js-utils#readme",
@@ -22,7 +27,7 @@
     "url": "https://github.com/M-Husein/q-js-utils/issues"
   },
   "type": "module",
-  "main": "./dist/index.cjs.js",
+  "main": "./dist/index.umd.js",
   "module": "./dist/index.es.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -45,6 +50,11 @@
       "types": "./dist/request.d.ts",
       "import": "./dist/request.es.js",
       "require": "./dist/request.cjs.js"
+    },
+    "./incrementId": {
+      "types": "./dist/incrementId.d.ts",
+      "import": "./dist/incrementId.es.js",
+      "require": "./dist/incrementId.cjs.js"
     },
     "./getInitials": {
       "types": "./dist/getInitials.d.ts",
@@ -80,8 +90,12 @@
     "release": "release-it"
   },
   "devDependencies": {
+    "@release-it/bumper": "^7.0.5",
+    "@release-it/conventional-changelog": "^10.0.1",
     "@types/node": "^22.15.29",
     "@vitest/coverage-v8": "^3.1.4",
+    "release-it": "^19.0.3",
+    "terser": "^5.40.0",
     "typescript": "^5.8.3",
     "vite": "^6.3.5",
     "vite-plugin-dts": "^4.5.4",
