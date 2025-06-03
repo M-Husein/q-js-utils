@@ -53,6 +53,7 @@ console.log(padWithLeadingZeros(one)); // '01'
 ```
 
 ### request
+
 ```js
 import { request } from 'q-js-utils/request';
 
@@ -62,6 +63,16 @@ try {
 } catch (error) {
   console.error('request Error:', error);
 }
+```
+
+### incrementId
+
+```js
+import { incrementId } from '../src/incrementId';
+
+console.log(`incrementId to ${incrementId()}`);
+console.log(`incrementId to ${incrementId()}`);
+console.log(`incrementId to ${incrementId('x')}`);
 ```
 
 ### cached

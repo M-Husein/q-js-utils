@@ -1,55 +1,5 @@
 import { PerformanceFetchOptions, ChainedFetchResponse } from './types';
-import { appendQueryParams, processRequestBody, mergeHeaders, handleProgress } from './utils';
-
-// If want to export types specifically from this entry
-// export * from './types';
-
-/**
- * Custom error class for non-2xx HTTP responses (e.g., 404, 500).
- * It carries the original `Response` object, allowing consumers to
- * access response details and manually parse the error body if needed.
- */
-export class FetchError extends Error {
-  /**
-   * Creates an instance of FetchError.
-   * @param status - The HTTP status code (e.g., 404).
-   * @param statusText - The HTTP status text (e.g., "Not Found").
-   * @param url - The URL that was requested.
-   * @param originalResponse - The raw `Response` object received from `fetch`.
-   * @param message - An optional custom error message.
-   */
-  constructor(
-    public status: number,
-    public statusText: string,
-    public url: string,
-    public originalResponse: Response,
-    message: string = `Fetch failed: ${status} ${statusText} for ${url}`,
-  ) {
-    super(message);
-    this.name = 'FetchError';
-    // Set the prototype explicitly to ensure `instanceof` works correctly
-    // in environments that might not handle class extension automatically.
-    Object.setPrototypeOf(this, FetchError.prototype);
-  }
-}
-
-/**
- * @DEV : Option
- * Custom error class for aborted requests, which can happen due to a timeout
- * or if the request was manually aborted via an `AbortController`.
- */
-export class AbortError extends Error {
-  /**
-   * Creates an instance of AbortError.
-   * @param message - A descriptive error message.
-   * @param originalError - The original `DOMException` (e.g., 'AbortError') if available.
-   */
-  constructor(message: string, public originalError?: DOMException) {
-    super(message);
-    this.name = 'AbortError';
-    Object.setPrototypeOf(this, AbortError.prototype);
-  }
-}
+import { appendQueryParams, processRequestBody, handleProgress } from './utils'; // mergeHeaders, FetchError, AbortError
 
 /**
  * A wrapper around `Promise<Response>` that provides convenient chained methods
@@ -128,20 +78,13 @@ class FetchResponse implements ChainedFetchResponse {
  * This function returns a `ChainedFetchResponse` object, which allows chaining
  * methods like `.json()`, `.text()`, etc., to conveniently consume the response body.
  *
- * Network errors, request timeouts, and non-2xx HTTP statuses (`response.ok` is false)
- * are handled by throwing custom error classes (`AbortError` or `FetchError`) for easier
- * and more specific error management by the consumer.
- *
- * This version is designed to be minimalist, without global configuration
- * or convenience HTTP method shortcuts.
+ * Network errors, request timeouts, and non-2xx HTTP statuses (`response.ok` is false).
  *
  * @param url - The URL for the request. Can be a relative path (e.g., '/api/data')
  * which will be resolved against the current origin, or an absolute URL.
  * @param options - An object containing request configuration, extending standard `RequestInit`.
  * @returns A `ChainedFetchResponse` object that wraps a `Promise<Response>`, allowing
  * for chained body parsing methods.
- * @throws {AbortError} If the request is aborted due to a timeout or an external signal.
- * @throws {FetchError} If the response status is not in the 2xx range (e.g., 404, 500).
  * @throws {Error} For other network-related errors (e.g., CORS issues, DNS errors).
  */
 export function request(
@@ -162,16 +105,16 @@ export function request(
   // which returns a Promise<Response>. This promise is then wrapped by FetchResponse.
   const coreFetchPromise = (async (): Promise<Response> => {
     // Create new objects instead of mutating
-    let finalOptions: Omit<RequestInit, 'body'> = {
+    let finalOptions: RequestInit = {
       ...options,
-      headers: mergeHeaders(headers), // New headers object
+      headers: new Headers(headers),
     };
 
     // Append query parameters to the URL string
     let finalUrl: string = appendQueryParams(url, query);
 
     // Process the request body (e.g., JSON.stringify, FormData handling)
-    // and set the appropriate Content-Type header. Mutates `finalOptions`.
+    // and set the appropriate Content-Type header.
     processRequestBody(finalOptions, body);
 
     // Setup AbortController for handling timeouts and external aborts:
@@ -187,12 +130,7 @@ export function request(
 
     // Execute Before Hook if defined. It can modify `finalOptions`.
     if (beforeHook) {
-      /**
-       * @DEV :
-       * Next release may only await `beforeHook(finalOptions)`,
-       * which will directly change the finalOptions data in beforeHook call.
-       */
-      finalOptions = await beforeHook(finalOptions);
+      beforeHook(finalOptions);
     }
 
     let response: Response;
@@ -210,13 +148,19 @@ export function request(
         response = await afterHook(response, finalOptions);
       }
 
-      /**
-       * @DEV : Maybe bot use FetchError class, only using new Error().
-       */
       // Handle Non-OK HTTP Responses (e.g., 404, 500).
-      // Throw a `FetchError` with the original `Response` object for detailed handling by the consumer.
       if (!response.ok) {
-        throw new FetchError(response.status, response.statusText, response.url, response);
+        let err: any = new Error('Fetch failed');
+
+        // Attach specific, commonly used properties directly for convenience
+        err.status = response.status;
+        err.statusText = response.statusText;
+        err.data = await response.json().catch(() => null); // The parsed JSON error body
+        // Attach the full response object for comprehensive debugging
+        // Note: The body stream of `response` will likely be consumed by `response.json()` above.
+        // err.response = response; 
+        
+        throw err;
       }
 
       // If the response is OK (2xx or 3xx), return the raw `Response` object.

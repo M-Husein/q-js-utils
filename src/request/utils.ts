@@ -8,29 +8,52 @@ import { QueryParams, RequestBody, OnProgressCallback } from './types';
  * @returns The URL with appended query parameters.
  */
 export function appendQueryParams(url: string, query?: QueryParams): string {
-  if (!query || Object.keys(query).length === 0) {
-    return url;
-  }
+  if (!query || !Object.keys(query).length) return url;
 
-  let queryString = '';
-  for (const key in query) {
-    if (Object.prototype.hasOwnProperty.call(query, key)) {
-      const value = query[key];
-      if (Array.isArray(value)) {
-        for (let i = 0; i < value.length; i++) {
-          if (queryString) queryString += '&';
-          queryString += `${encodeURIComponent(key)}=${encodeURIComponent(String(value[i]))}`;
-        }
-      } else {
-        if (queryString) queryString += '&';
-        queryString += `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`;
-      }
+  let params = new URLSearchParams();
+  for (let key in query) {
+    if (!Object.prototype.hasOwnProperty.call(query, key)) continue;
+
+    let value = query[key];
+    if (value == null) continue; // Skip null/undefined
+
+    if (Array.isArray(value)) {
+      value.forEach(item => params.append(key, '' + item));
+    } else {
+      params.append(key, value + '');
     }
   }
 
-  // Check if URL already has query params without creating URL object
-  return url.indexOf('?') !== -1 ? `${url}&${queryString}` : `${url}?${queryString}`;
+  const queryString = params.toString();
+  return queryString 
+    ? url + (url.includes('?') ? '&' : '?') + queryString
+    : url;
 }
+
+// export function appendQueryParams2(url: string, query?: QueryParams): string {
+//   if (!query || !Object.keys(query).length) {
+//     return url;
+//   }
+
+//   let queryString = '';
+//   for (let key in query) {
+//     if (Object.prototype.hasOwnProperty.call(query, key)) {
+//       let value = query[key];
+//       if (Array.isArray(value)) {
+//         for (let i = 0; i < value.length; i++) {
+//           if (queryString) queryString += '&';
+//           queryString += `${encodeURIComponent(key)}=${encodeURIComponent(String(value[i]))}`;
+//         }
+//       } else {
+//         if (queryString) queryString += '&';
+//         queryString += `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`;
+//       }
+//     }
+//   }
+
+//   // Check if URL already has query params without creating URL object
+//   return url.indexOf('?') !== -1 ? `${url}&${queryString}` : `${url}?${queryString}`;
+// }
 
 /**
  * Processes the request body based on its type and sets the appropriate
@@ -40,48 +63,48 @@ export function appendQueryParams(url: string, query?: QueryParams): string {
  * @param body - The request payload.
  */
 export function processRequestBody(options: RequestInit, body?: RequestBody): void {
-  if (body === undefined || body === null) {
-    options.body = undefined;
-    return;
-  }
+    // Ensure options.headers is a Headers object.
+    // If it's undefined, create a new Headers object.
+    // If it's something else (like a plain object), convert it to Headers.
+    // This makes the function more robust to initial input types.
+    // if (!options.headers || !(options.headers instanceof Headers)) {
+    //   options.headers = new Headers(options.headers as HeadersInit);
+    // }
 
-  // Ensure headers exist as a mutable plain object
-  if (!options.headers) {
-    options.headers = {};
-  } else if (options.headers instanceof Headers) {
-    // Convert Headers object to plain object for direct manipulation
-    // options.headers = Object.fromEntries(options.headers.entries());
+    // const headers = options.headers as Headers; // Now we can safely cast to Headers
 
-    // FIX: Explicitly cast to Iterable<[string, string]>
-    // The Headers object is iterable and yields [key, value] pairs,
-    // which Object.fromEntries expects.
-    // @ts-ignore
-    options.headers = Object.fromEntries(options.headers as Iterable<[string, string]>);
-  }
+    if (body == null) {
+      // options.body = undefined;
+      // // Optionally, remove Content-Type if body is null/undefined and no body is sent
+      // headers.delete('Content-Type');
+      return;
+    }
 
-  const headers = options.headers as Record<string, string>; // Cast for easier access
+    if (body instanceof FormData) {
+      // FormData manages its own Content-Type, do not set explicitly
+      options.body = body;
+      return;
+    }
 
-  if (body instanceof FormData) {
-    // FormData manages its own Content-Type, do not set explicitly
-    options.body = body;
-    return;
-  }
+    const headers = options.headers as Headers; // Now we can safely cast to Headers
 
-  if (body instanceof URLSearchParams) {
-    headers['Content-Type'] = 'application/x-www-form-urlencoded';
-    options.body = body.toString();
-    return;
-  }
+    if (body instanceof URLSearchParams) {
+      // Use .set() method for Headers object
+      headers.set('Content-Type', 'application/x-www-form-urlencoded');
+      options.body = body.toString(); // URLSearchParams stringifies like this for fetch
+      return;
+    }
 
-  if (typeof body === 'object') {
-    // Assume JSON for plain objects
-    headers['Content-Type'] = 'application/json';
-    options.body = JSON.stringify(body);
-    return;
-  }
+    if (typeof body === 'object' && body !== null && !(body instanceof Blob) && !(body instanceof ArrayBuffer) && !(body instanceof ReadableStream)) {
+      // Assume JSON for plain objects (and check for Blob/ArrayBuffer/ReadableStream specifically)
+      // Use .set() method for Headers object
+      headers.set('Content-Type', 'application/json');
+      options.body = JSON.stringify(body);
+      return;
+    }
 
-  // For Blob, ArrayBuffer, string, etc., assign directly
-  options.body = body as BodyInit;
+    // For Blob, ArrayBuffer, string, ReadableStream etc., assign directly
+    options.body = body as BodyInit;
 }
 
 /**
@@ -90,18 +113,43 @@ export function processRequestBody(options: RequestInit, body?: RequestBody): vo
  * @param specificHeaders - The headers provided for the current request.
  * @returns A new plain object containing the merged headers.
  */
-export function mergeHeaders(
-  specificHeaders?: HeadersInit,
-): Record<string, string> {
-  const merged: Record<string, string> = {}; // Start with an empty object
+// export function mergeHeaders(
+//   specificHeaders?: HeadersInit,
+// ): Record<string, string> {
+//   // If no headers are provided, return an empty object immediately.
+//   if (specificHeaders == null) { // Checks for both undefined and null
+//     return {};
+//   }
 
-  if (specificHeaders instanceof Headers) {
-    specificHeaders.forEach((value, key) => (merged[key] = value));
-  } else if (specificHeaders) {
-    Object.assign(merged, specificHeaders); // Fast merge for plain objects
-  }
-  return merged;
-}
+//   // If it's a Headers object, convert it to a plain object.
+//   // Headers.prototype.entries() returns an iterator of [key, value] pairs,
+//   // which Object.fromEntries can directly consume.
+//   if (specificHeaders instanceof Headers) {
+//     // @ts-ignore
+//     return Object.fromEntries(specificHeaders?.entries());
+//   }
+
+//   // If it's an array of [key, value] string pairs, convert it to a plain object.
+//   // Object.fromEntries also works directly with arrays of such pairs.
+//   if (Array.isArray(specificHeaders)) {
+//     return Object.fromEntries(specificHeaders);
+//   }
+  
+//   return { ...specificHeaders };
+// }
+
+// export function mergeHeaders(
+//   specificHeaders?: HeadersInit,
+// ): Record<string, string> {
+//   const merged: Record<string, string> = {}; // Start with an empty object
+
+//   if (specificHeaders instanceof Headers) {
+//     specificHeaders.forEach((value, key) => (merged[key] = value));
+//   } else if (specificHeaders) {
+//     Object.assign(merged, specificHeaders); // Fast merge for plain objects
+//   }
+//   return merged;
+// }
 
 /**
  * Simple URL joiner. Does not create URL object.
@@ -159,3 +207,44 @@ export async function handleProgress(
     statusText: response.statusText,
   });
 }
+
+/**
+  * Custom error class for non-2xx HTTP responses (e.g., 404, 500).
+  * It carries the original `Response` object, allowing consumers to
+  * access response details and manually parse the error body if needed.
+  * @param status - The HTTP status code (e.g., 404).
+  * @param statusText - The HTTP status text (e.g., "Not Found").
+  * @param url - The URL that was requested.
+  * @param originalResponse - The raw `Response` object received from `fetch`.
+  * @param message - An optional custom error message.
+ */
+// export class FetchError extends Error {
+//   constructor(
+//     public status: number,
+//     public statusText: string,
+//     public url: string,
+//     public originalResponse: Response,
+//     message: string = `Fetch failed: ${status} ${statusText} for ${url}`,
+//   ) {
+//     super(message);
+//     this.name = 'FetchError';
+//     // Set the prototype explicitly to ensure `instanceof` works correctly
+//     // in environments that might not handle class extension automatically.
+//     Object.setPrototypeOf(this, FetchError.prototype);
+//   }
+// }
+
+/**
+ * @DEV : Option
+ * Custom error class for aborted requests, which can happen due to a timeout
+ * or if the request was manually aborted via an `AbortController`.
+ * @param message - A descriptive error message.
+ * @param originalError - The original `DOMException` (e.g., 'AbortError') if available.
+ */
+// export class AbortError extends Error {
+//   constructor(message: string, public originalError?: DOMException) {
+//     super(message);
+//     this.name = 'AbortError';
+//     Object.setPrototypeOf(this, AbortError.prototype);
+//   }
+// }

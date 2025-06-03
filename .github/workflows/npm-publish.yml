@@ -1,5 +1,3 @@
-# .github/workflows/npm-publish.yml
-
 name: Publish to npm
 
 # Trigger this workflow when a push occurs on the 'main' branch.

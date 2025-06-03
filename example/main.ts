@@ -1,5 +1,7 @@
 // Import functions directly from your library's source for hot-reloading during dev
 import { request } from '../src/request';
+import requestExamples from '../src/request/example';
+
 import { incrementId } from '../src/incrementId';
 import { asyncSimulation } from '../src/asyncSimulation';
 import { str2Hex } from '../src/str2Hex';
@@ -16,6 +18,10 @@ async function runExamples() {
     } catch (error) {
         console.error('request Error:', error);
     }
+
+    await requestExamples();
+
+    // 
 
     const name1 = 'Muhamad Husein';
     const name2 = 'Tony Stark';
