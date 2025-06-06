@@ -5,15 +5,8 @@
  * @param fn Function to cache
  * @returns Cached version of the function
  */
-export function cachePrimitive<T>(fn: (key: string | number) => T): (key: string | number) => T {
+export const cachePrimitive = <T>(fn: (key: string | number) => T): (key: string | number) => T => {
   let cache: Record<string | number, T> = Object.create(null);
   
-  return function cachedFn(key: string | number): T {
-    let hit = cache[key];
-    return hit || (cache[key] = fn(key));
-  };
+  return (key: string | number): T => cache[key] || (cache[key] = fn(key));
 }
-
-// Usage:
-// const cachedToUpper = cachePrimitive((str: string) => str.toUpperCase());
-// console.log(cachedToUpper('test')); // Caches and returns 'TEST'

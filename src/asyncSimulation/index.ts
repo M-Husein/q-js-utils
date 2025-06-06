@@ -8,19 +8,20 @@ interface AsyncSimulationOptions {
 
 /**
  * Simulates an asynchronous operation with configurable delay and failure mode
- * @param options Configuration options
- * @param options.delay Delay in milliseconds (default: 1000ms)
- * @param options.isFail Whether to simulate failure (default: false)
- * @param options.signal AbortSignal for cancellation
+ * @param delay Delay in milliseconds (default: 1000ms)
+ * @param isFail Whether to simulate failure (default: false)
+ * @param signal AbortSignal for cancellation
  * @returns Promise that resolves with 1 or rejects with 0/AbortError
  */
-export function asyncSimulation({
+export const asyncSimulation = ({
   delay = 1e3,
   isFail, // Explicit default: isFail = false
   signal
-}: AsyncSimulationOptions = {}): Promise<1 | 0> {
+}: AsyncSimulationOptions = {}): Promise<1 | 0> => {
   return new Promise((resolve, reject) => {
-    if (signal?.aborted) return reject(abortException()); // Early exit
+    if (signal?.aborted){
+      return reject(abortException());
+    }
 
     const timeout = setTimeout(() => {
       isFail ? reject(0) : resolve(1); // Settle normally

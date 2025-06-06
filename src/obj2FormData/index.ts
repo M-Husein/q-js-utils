@@ -3,14 +3,14 @@
  * @param obj The object to convert
  * @returns FormData containing all enumerable properties of the input object
  */
-export function obj2FormData(obj: Record<string, string | Blob | number | boolean>): FormData {
+export const obj2FormData = (obj: Record<string, string | Blob | number | boolean>): FormData => {
   let fd = new FormData();
   
   for (let key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
       let value = obj[key];
       // Convert non-string values to string (except Blob which FormData handles natively)
-      fd.append(key, value instanceof Blob ? value : String(value));
+      fd.append(key, value instanceof Blob ? value : '' + value);
     }
   }
   

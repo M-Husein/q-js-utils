@@ -1,9 +1,7 @@
-// Re-exporting from request/types, or if request/types was consolidated here:
-// Assuming request/types defines HttpMethod, RequestBody, QueryParams, DownloadProgress, 
-// OnProgressCallback, BeforeHook, AfterHook, ChainedFetchResponse, PerformanceFetchOptions
+// Re-exporting from request/types
 export * from './request/types';
 
-// Add any other common types here for your new utilities
+// Add any other common types for new utilities
 export type Primitive = string | number | boolean | symbol | bigint | undefined | null;
 
 export interface KeyValuePair<K = string, V = any> {

@@ -4,7 +4,7 @@
  * @param no string
  * @returns 'Initial name'
  */
-export function getInitials(name: string, no = "?"){
+export const getInitials = (name: string, no = "?") => {
   if(!name || !name.trim()){
     return no;
   }
