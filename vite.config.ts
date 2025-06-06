@@ -5,9 +5,6 @@ import dts from 'vite-plugin-dts';
 export default defineConfig({
   build: {
     lib: {
-      // Define multiple entry points.
-      // The key of each entry will determine the output filename prefix (e.g., 'index', 'number', 'request').
-      // The value is the path to the source file for that entry.
       entry: {
         index: resolve(__dirname, 'src/index.ts'), // Main bundle
         number: resolve(__dirname, 'src/number/index.ts'),
@@ -18,8 +15,6 @@ export default defineConfig({
         darkOrLight: resolve(__dirname, 'src/darkOrLight/index.ts'),
         str2Hex: resolve(__dirname, 'src/str2Hex/index.ts'),
         obj2FormData: resolve(__dirname, 'src/obj2FormData/index.ts'),
-        // Add more entries as you create new utility categories or standalone functions.
-        // E.g., 'object': resolve(__dirname, 'src/object/index.ts')
       },
 
       // formats: ['es', 'cjs', 'umd', 'iife'],
@@ -44,12 +39,6 @@ export default defineConfig({
       format: {
         comments: false, // Removes comments
       },
-      // output: {
-      //   // This is the key setting to remove all comments from the output
-      //   comments: false,
-      //   // You can specify a regex to keep certain comments (e.g., license comments starting with /*!)
-      //   // comments: /^\/*!/i, // Example: Keeps comments starting with /*!
-      // },
     },
     // Prevent bundling external dependencies.
     // List any npm packages that your library *uses* but expects the consumer to *install*.

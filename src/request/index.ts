@@ -1,5 +1,5 @@
-import { PerformanceFetchOptions, ChainedFetchResponse } from './types';
-import { appendQueryParams, processRequestBody, handleProgress } from './utils'; // mergeHeaders, FetchError, AbortError
+import { FetchOptions, ChainedFetchResponse } from './types';
+import { appendQueryParams, processRequestBody, handleProgress } from './utils';
 
 /**
  * A wrapper around `Promise<Response>` that provides convenient chained methods
@@ -83,8 +83,8 @@ class FetchResponse implements ChainedFetchResponse {
  * @param url - The URL for the request. Can be a relative path (e.g., '/api/data')
  * which will be resolved against the current origin, or an absolute URL.
  * @param options - An object containing request configuration, extending standard `RequestInit`.
- * @returns A `ChainedFetchResponse` object that wraps a `Promise<Response>`, allowing
- * for chained body parsing methods.
+ * @returns A `ChainedFetchResponse` object that wraps a `Promise<Response>`,
+ * allowing for chained body parsing methods.
  * @throws {Error} For other network-related errors (e.g., CORS issues, DNS errors).
  */
 export function request(
@@ -99,11 +99,11 @@ export function request(
     beforeHook, // Hook executed before the request
     afterHook, // Hook executed after the response
     ...options // Remaining standard RequestInit properties (e.g., method, cache, credentials)
-  }: PerformanceFetchOptions = {} // Default to an empty options object
+  }: FetchOptions = {} // Default to an empty options object
 ): ChainedFetchResponse {
   // The core fetch logic is wrapped in an immediately invoked async function
   // which returns a Promise<Response>. This promise is then wrapped by FetchResponse.
-  const coreFetchPromise = (async (): Promise<Response> => {
+  const coreFetchPromise = async (): Promise<Response> => {
     // Create new objects instead of mutating
     let finalOptions: RequestInit = {
       ...options,
@@ -150,40 +150,28 @@ export function request(
 
       // Handle Non-OK HTTP Responses (e.g., 404, 500).
       if (!response.ok) {
-        let err: any = new Error('Fetch failed');
+        let err: any = new Error('Fetch failed'); // , { cause: "FetchError" }
 
         // Attach specific, commonly used properties directly for convenience
+        err.name = 'FetchError';
         err.status = response.status;
         err.statusText = response.statusText;
         err.data = await response.json().catch(() => null); // The parsed JSON error body
         // Attach the full response object for comprehensive debugging
         // Note: The body stream of `response` will likely be consumed by `response.json()` above.
-        // err.response = response; 
+        // err.response = response;
         
         throw err;
       }
 
-      // If the response is OK (2xx or 3xx), return the raw `Response` object.
-      // The caller will then use chained methods (`.json()`, `.text()`) to parse the body.
       return response;
     } catch (error) {
-      // Ensure timeout is cleared regardless of success or error path
-      if (timeoutId) clearTimeout(timeoutId);
-
-      /** @DEV : Option */
-      // Identify and re-throw AbortErrors (from timeout or manual abort) as `AbortError`.
-      // if (error instanceof DOMException && error.name === 'AbortError') {
-      //   throw new AbortError('Request aborted by user or timeout.', error);
-      // }
-
-      // Re-throw all other errors (e.g., network connectivity issues, CORS errors).
       throw error;
     } finally {
       // Always clear the timeout if it was set to prevent memory leaks.
       if (timeoutId) clearTimeout(timeoutId);
     }
-  })();
+  };
 
-  // Wrap the core fetch promise in `FetchResponse` to provide chained parsing methods.
-  return new FetchResponse(coreFetchPromise);
+  return new FetchResponse(coreFetchPromise());
 }

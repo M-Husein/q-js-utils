@@ -1,4 +1,5 @@
-import { request } from './index'; // FetchError, AbortError
+import { request } from './index';
+// import { NormalizedRequestOptions } from './types';
 
 export default async function runExamples() {
   console.log('--- Starting Simplified Request API Examples ---');
@@ -8,15 +9,6 @@ export default async function runExamples() {
     const data = await request('https://jsonplaceholder.typicode.com/todos/1').json();
     console.log('1. Basic GET (title):', data.title);
   } catch (error) {
-    // if (error instanceof FetchError) {
-    //   console.error('1. Basic GET (FetchError):', error.status, error.originalResponse.url);
-    // } 
-    // else if (error instanceof AbortError) {
-    //   console.error('1. Basic GET (AbortError):', error.message);
-    // } 
-    // else {
-    //   console.error('1. Basic GET (Other Error):', error);
-    // }
     console.error('1. Basic GET (Error):', error);
   }
 
@@ -24,8 +16,9 @@ export default async function runExamples() {
   try {
     const text = await request('https://jsonplaceholder.typicode.com/todos', {
       query: { userId: 1, completed: false },
-    }).text();
-    console.log('2. GET with query params (first 100 chars of text):', text.substring(0, 100) + '...');
+    }).json();
+    // console.log('2. GET with query params (first 100 chars of text):', text.substring(0, 100) + '...');
+    console.log('2. GET with query params json:', text);
   } catch (error) {
     console.error('2. GET with query params Error:', error);
   }
@@ -52,8 +45,9 @@ export default async function runExamples() {
   // 4. Download progress
   console.log('4. Download Progress');
   try {
-    const blob = await request('https://www.learningcontainer.com/wp-content/uploads/2020/07/5MB-test.zip', {
+    const blob = await request('https://httpbin.org/bytes/1048576', {
       onProgress: (progress) => {
+        console.log('progress: ', progress);
         if (progress.total) {
           console.log(
             `Progress: ${progress.loaded} / ${progress.total} bytes (${(
@@ -65,9 +59,15 @@ export default async function runExamples() {
         }
       },
     }).blob();
+
     console.log('Download complete. Blob size:', blob.size, 'bytes');
-  } catch (error) {
+  } catch (error: any) {
     console.error('4. Download Progress Error:', error);
+    // console.error('error.name: ', error.name);
+    // console.error('error.message: ', error.message);
+    for(let err in error){
+      console.error('err: ', err);
+    }
   }
 
   // 5. Request timeout
@@ -76,12 +76,6 @@ export default async function runExamples() {
     await request('https://httpbin.org/delay/2', { timeout: 100 }).json();
     console.log('   Timeout test succeeded (unexpected)');
   } catch (error) {
-    // if (error instanceof AbortError) {
-    //   console.error('Timeout Error:', error.message);
-    // } else {
-    //   console.error('Other Error during timeout test:', error);
-    // }
-
     console.error('Other Error during timeout test:', error);
   }
 
@@ -90,20 +84,19 @@ export default async function runExamples() {
   const abortController = new AbortController();
   const abortTimeout = setTimeout(() => {
     abortController.abort();
-    console.log('Manual abort triggered!');
+    // console.log('Manual abort triggered!');
   }, 50);
 
   try {
     await request('https://httpbin.org/delay/2', { signal: abortController.signal }).json();
     console.log('Manual abort test succeeded (unexpected)');
-  } catch (error) {
-    // if (error instanceof AbortError) {
-    //   console.error('Manual Abort Error:', error.message);
-    // } 
-    // else {
-    //   console.error('Other Error during manual abort test:', error);
-    // }
-    console.error('Other Error during manual abort test:', error);
+  } catch (error: any) {
+    console.log('Error:', error);
+    // console.log('Error mesage:', error.mesage);
+    // console.log('Error name:', error.name);
+    // console.log('Error status:', error.status);
+    // console.log('Error statusText:', error.statusText);
+    // console.log('Error data:', error.data);
   } finally {
     clearTimeout(abortTimeout);
   }
@@ -112,20 +105,13 @@ export default async function runExamples() {
   console.log('7. Custom Error Handling (404 Not Found)');
   try {
     await request('https://jsonplaceholder.typicode.com/non-existent-path-12345').json();
-  } catch (error) {
-    // if (error instanceof FetchError) {
-    //   console.error(`FetchError: ${error.message}`);
-    //   console.error(`Status: ${error.status}`);
-    //   try {
-    //     const errorBody = await error.originalResponse.text();
-    //     console.error('Error Body:', errorBody.substring(0, 100) + '...');
-    //   } catch (parseError) {
-    //     console.error('Failed to parse 404 error body:', parseError);
-    //   }
-    // } else {
-    //   console.error('Other Error:', error);
-    // }
-    console.error('Error:', error);
+  } catch (error: any) {
+    console.log('Error:', error);
+    console.log('Error mesage:', error.mesage);
+    console.log('Error name:', error.name);
+    console.log('Error status:', error.status);
+    console.log('Error statusText:', error.statusText);
+    console.log('Error data:', error.data);
   }
 
   // 8. Error during JSON parsing (invalid JSON from server for 200 OK)
@@ -145,7 +131,7 @@ export default async function runExamples() {
   console.log('9. Using before and after hooks for a specific request');
   try {
     const response = await request('https://jsonplaceholder.typicode.com/comments/1', {
-      beforeHook: async (requestOptions: any) => {
+      beforeHook: (requestOptions: RequestInit) => {
         console.log(`[Specific Before Hook] Preparing request: `, requestOptions);
         // let token = await getToken();
         // if (token) {
@@ -155,7 +141,8 @@ export default async function runExamples() {
 
         // requestOptions.headers.Authorization = 'Bearer';
         // (requestOptions.headers as Record<string, string>).Authorization = 'Bearer';
-        requestOptions.headers.set('Authorization', 'Bearer ');
+        // requestOptions.headers.set('Authorization', 'Bearer ');
+        (requestOptions.headers as Headers).set('Authorization', 'Bearer ');
       },
       afterHook: async (response) => { // , options
         console.log(`[Specific After Hook] Received response with status ${response.status}`);
@@ -173,5 +160,3 @@ export default async function runExamples() {
     console.error('9. Hooked request error:', error);
   }
 }
-
-// runExamples();

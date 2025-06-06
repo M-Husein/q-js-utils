@@ -1,12 +1,11 @@
-// Import functions directly from your library's source for hot-reloading during dev
 import { request } from '../src/request';
-import requestExamples from '../src/request/example';
-
 import { nextId } from '../src/nextId';
 import { asyncSimulation } from '../src/asyncSimulation';
 import { str2Hex } from '../src/str2Hex';
 import { getInitials } from '../src/getInitials';
 import { darkOrLight } from '../src/darkOrLight';
+
+import requestExamples from '../src/request/example';
 
 async function runExamples() {
     console.log('--- Running Library Examples ---');
@@ -90,7 +89,6 @@ async function runExamples() {
 
 runExamples();
 
-// You can add simple UI interactions here if you want to test them visually
 const appDiv = document.getElementById('app');
 if (appDiv) {
     appDiv.innerHTML += `<p>Examples executed. Check console.</p>`;

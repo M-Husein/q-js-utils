@@ -48,7 +48,7 @@ export type OnProgressCallback = (progress: DownloadProgress) => void;
  * @param options - The `RequestInit` object that will be passed to `fetch`.
  * @returns The (potentially modified) `RequestInit` object, or a Promise resolving to it.
  */
-export type BeforeHook = (options: RequestInit) => void; // RequestInit | Promise<RequestInit>
+export type BeforeHook = (options: RequestInit) => void;
 // export type BeforeHook = (url: string, options: RequestInit) => RequestInit | Promise<RequestInit>;
 
 /**
@@ -108,7 +108,7 @@ export interface ChainedFetchResponse {
  * Options specific to a single fetch request.
  * These extend the standard `RequestInit` interface and add custom functionalities.
  */
-export interface PerformanceFetchOptions extends Omit<RequestInit, 'body'> {
+export interface FetchOptions extends Omit<RequestInit, 'body'> {
   /** Query parameters to append to the URL. */
   query?: QueryParams;
 

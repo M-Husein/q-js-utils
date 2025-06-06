@@ -34,8 +34,5 @@ export const darkOrLight = cachePrimitive((color: any) => {
   );
 
   // Using the HSP value, determine whether the color is light or dark
-  // if(hsp > 127.5) return 'light';
-  // return 'dark';
-
   return hsp > 127.5 ? 'light' : 'dark';
 });

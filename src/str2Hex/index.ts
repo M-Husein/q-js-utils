@@ -4,7 +4,7 @@
  * @param no string
  * @returns 'Hexa string'
  */
-export function str2Hex(str: string, no = '5a6268'): string {
+export const str2Hex = (str: string, no = '666' /* 5a6268 */): string => {
   if (!str?.length) return no;
 
   let hash = 0;

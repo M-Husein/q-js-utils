@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { request } from './index'; // FetchError, AbortError
+import { request } from './index';
 
 // Mock the global fetch function for testing network requests
 beforeEach(() => {
