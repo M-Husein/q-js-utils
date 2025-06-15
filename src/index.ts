@@ -1,5 +1,7 @@
 export * from './number';
 export * from './cached';
+export * from './debounce';
+export * from './debounceAdvanced';
 export * from './request';
 export * from './nextId';
 export * from './getInitials';

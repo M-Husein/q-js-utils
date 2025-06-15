@@ -9,6 +9,8 @@ export default defineConfig({
         index: resolve(__dirname, 'src/index.ts'), // Main bundle
         number: resolve(__dirname, 'src/number/index.ts'),
         cached: resolve(__dirname, 'src/cached/index.ts'),
+        debounce: resolve(__dirname, 'src/debounce/index.ts'),
+        debounceAdvanced: resolve(__dirname, 'src/debounceAdvanced/index.ts'),
         request: resolve(__dirname, 'src/request/index.ts'),
         nextId: resolve(__dirname, 'src/nextId/index.ts'),
         getInitials: resolve(__dirname, 'src/getInitials/index.ts'),
