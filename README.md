@@ -91,6 +91,8 @@ const debouncedResize = debounce(handleResize, 250);
 window.addEventListener('resize', debouncedResize);
 ```
 
+---
+
 ### debounceAdvanced
 
 **Resetting a Form Before Debounced Submission**
@@ -138,6 +140,115 @@ shootBullet(); // Queued for 300ms later...
 
 // Player dies before the next shot
 shootBullet.cancel(); // Prevents queued shots
+```
+
+---
+
+### throttle
+
+**Basic usage**
+```js
+import { throttle } from 'q-js-utils/throttle';
+
+const throttledScroll = throttle((position: number) => {
+  console.log('Current scroll position:', position);
+}, 100);
+
+window.addEventListener('scroll', () => throttledScroll(window.scrollY));
+```
+
+**With default wait time (300ms)**
+```js
+import { throttle } from 'q-js-utils/throttle';
+
+const throttledClick = throttle(() => console.log('Clicked!'));
+button.addEventListener('click', throttledClick);
+```
+
+---
+
+### throttleAdvanced
+
+**Cancellation Support (`cancel()`)**
+```js
+import { throttleAdvanced } from 'q-js-utils/throttleAdvanced';
+
+const throttledScroll = throttleAdvanced(handleScroll, 100);
+window.addEventListener('scroll', throttledScroll);
+
+// Later...
+throttledScroll.cancel(); // Stops any pending execution
+```
+
+**Immediate Execution (`flush()`)**
+```js
+import { throttleAdvanced } from 'q-js-utils/throttleAdvanced';
+
+const throttledApiCall = throttleAdvanced(fetchData, 1000);
+throttledApiCall("query");
+
+// Force execute if waiting
+throttledApiCall.flush();
+```
+
+**Pending Check (`pending()`)**
+```js
+if (throttledFn.pending()) {
+  console.log("Waiting to execute...");
+}
+```
+
+### Example Use Cases:
+
+**Cancellable Scroll Handler**
+```js
+import { throttleAdvanced } from 'q-js-utils/throttleAdvanced';
+
+const scrollHandler = throttleAdvanced((position: number) => {
+  console.log("Current scroll:", position);
+}, 200);
+
+window.addEventListener('scroll', () => scrollHandler(window.scrollY));
+
+// When leaving the page
+window.addEventListener('beforeunload', () => {
+  scrollHandler.cancel(); // Cleanup
+});
+```
+
+**Throttled API Calls with Manual Flush**
+```js
+import { throttleAdvanced } from 'q-js-utils/throttleAdvanced';
+
+const searchAPI = throttleAdvanced(async (query: string) => {
+  const results = await fetch(`/search?q=${query}`);
+  displayResults(results);
+}, 500);
+
+searchInput.addEventListener('input', (e) => {
+  searchAPI(e.target.value);
+});
+
+// "Search Now" button forces execution
+searchButton.addEventListener('click', () => {
+  searchAPI.flush();
+});
+```
+
+**Game Loop with Cancellation**
+```js
+import { throttleAdvanced } from 'q-js-utils/throttleAdvanced';
+
+const gameUpdate = throttleAdvanced((deltaTime: number) => {
+  updatePlayerPosition(deltaTime);
+}, 16); // ~60fps
+
+gameLoop.on('update', gameUpdate);
+
+// When game pauses
+pauseButton.addEventListener('click', () => {
+  gameUpdate.cancel(); // Stop pending updates
+});
 ```
 
 ---
