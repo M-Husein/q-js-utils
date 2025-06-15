@@ -2,7 +2,7 @@
 
 ### Debounce with full features
 
-```js
+```ts
 interface DebounceOptions {
   leading?: boolean;
   trailing?: boolean;

@@ -2,7 +2,7 @@
 
 ## Throttle with full features
 
-```js
+```ts
 export const throttleAdvanced = <T extends (...args: any[]) => void>(
   func: T,
   wait: number = 300,

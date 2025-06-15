@@ -1,6 +1,6 @@
 {
   "name": "q-js-utils",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "A collection of JavaScript utilities.",
   "license": "MIT",
   "keywords": [
@@ -102,6 +102,11 @@
       "types": "./dist/obj2FormData.d.ts",
       "import": "./dist/obj2FormData.es.js",
       "require": "./dist/obj2FormData.cjs.js"
+    },
+    "./isEqual": {
+      "types": "./dist/isEqual.d.ts",
+      "import": "./dist/isEqual.es.js",
+      "require": "./dist/isEqual.cjs.js"
     }
   },
   "files": [

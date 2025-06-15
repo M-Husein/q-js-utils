@@ -332,3 +332,30 @@ const objData = {
 };
 const dataForm = obj2FormData(objData);
 ```
+
+---
+
+### isEqual
+Deeply compares two values to determine if they are equal.
+Handles primitives, arrays, objects, Maps, Sets, Dates, RegExps, and circular references.
+
+Can be significantly faster than Lodash's `_.isEqual()` in most cases, while still handling all the same edge cases.
+
+```js
+import { isEqual } from 'q-js-utils/isEqual';
+
+isEqual({ a: 1, b: [2, 3] }, { a: 1, b: [2, 3] }) // true
+isEqual({ a: 1 }, { a: 1, b: undefined }) // false
+
+// ✅ Works (Date in object)
+isEqual(
+  { created_at: new Date('2023-01-01') },
+  { created_at: new Date('2023-01-01') }
+); // true
+
+// ✅ Works (Date in array)
+isEqual(
+  [new Date('2023-01-01')],
+  [new Date('2023-01-01')]
+); // true
+```
