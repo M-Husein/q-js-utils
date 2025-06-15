@@ -1,5 +1,6 @@
 import { debounce } from '../src/debounce';
 // import { debounceAdvanced } from '../src/debounceAdvanced';
+import { throttle } from '../src/throttle';
 import { request } from '../src/request';
 import { nextId } from '../src/nextId';
 import { asyncSimulation } from '../src/asyncSimulation';
@@ -10,6 +11,14 @@ import { darkOrLight } from '../src/darkOrLight';
 import requestExamples from '../src/request/example';
 
 async function runExamples() {
+    const fragment = document.createDocumentFragment();
+    Array.from({ length: 30 }).forEach((_, index) => {
+        let p = document.createElement("p");
+        p.textContent = `Paragraph ${index + 1}`;
+        fragment.appendChild(p);
+    });
+    document.body.appendChild(fragment);
+
     console.log('--- Running Library Examples ---');
 
     // Test debounce function
@@ -21,6 +30,12 @@ async function runExamples() {
     // Wait 250ms after resizing stops
     const debouncedResize = debounce(handleResize, 250);
     window.addEventListener('resize', debouncedResize);
+
+    // Test throttle function
+    const throttledScroll = throttle((position: number) => {
+        console.log('Current scroll position:', position);
+    }, 100);
+    window.addEventListener('scroll', () => throttledScroll(window.scrollY));
 
     // Test request function
     try {
