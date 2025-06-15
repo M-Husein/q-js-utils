@@ -11,6 +11,8 @@ export default defineConfig({
         cached: resolve(__dirname, 'src/cached/index.ts'),
         debounce: resolve(__dirname, 'src/debounce/index.ts'),
         debounceAdvanced: resolve(__dirname, 'src/debounceAdvanced/index.ts'),
+        throttle: resolve(__dirname, 'src/throttle/index.ts'),
+        throttleAdvanced: resolve(__dirname, 'src/throttleAdvanced/index.ts'),
         request: resolve(__dirname, 'src/request/index.ts'),
         nextId: resolve(__dirname, 'src/nextId/index.ts'),
         getInitials: resolve(__dirname, 'src/getInitials/index.ts'),

@@ -8,15 +8,21 @@
     "utility",
     "utils",
     "simple",
+    "advanced",
+    "modern",
     "javascript",
+    "js",
     "typescript",
+    "ts",
     "fetch",
+    "request",
     "number",
     "string",
     "object",
     "collection",
     "cached",
-    "debounce"
+    "debounce",
+    "throttle"
   ],
   "author": "Muhamad Husein <m.husein27@gmail.com>",
   "homepage": "https://github.com/M-Husein/q-js-utils#readme",
@@ -56,6 +62,16 @@
       "types": "./dist/debounceAdvanced.d.ts",
       "import": "./dist/debounceAdvanced.es.js",
       "require": "./dist/debounceAdvanced.cjs.js"
+    },
+    "./throttle": {
+      "types": "./dist/throttle.d.ts",
+      "import": "./dist/throttle.es.js",
+      "require": "./dist/throttle.cjs.js"
+    },
+    "./throttleAdvanced": {
+      "types": "./dist/throttleAdvanced.d.ts",
+      "import": "./dist/throttleAdvanced.es.js",
+      "require": "./dist/throttleAdvanced.cjs.js"
     },
     "./request": {
       "types": "./dist/request.d.ts",
