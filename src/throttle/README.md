@@ -2,7 +2,7 @@
 
 ## Simple throttle
 
-```js
+```ts
 export const throttle = <T extends (...args: any[]) => void>(
   func: T,
   wait: number = 300

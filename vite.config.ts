@@ -19,6 +19,7 @@ export default defineConfig({
         darkOrLight: resolve(__dirname, 'src/darkOrLight/index.ts'),
         str2Hex: resolve(__dirname, 'src/str2Hex/index.ts'),
         obj2FormData: resolve(__dirname, 'src/obj2FormData/index.ts'),
+        isEqual: resolve(__dirname, 'src/isEqual/index.ts'),
       },
 
       // formats: ['es', 'cjs', 'umd', 'iife'],

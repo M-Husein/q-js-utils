@@ -7,6 +7,7 @@ import { asyncSimulation } from '../src/asyncSimulation';
 import { str2Hex } from '../src/str2Hex';
 import { getInitials } from '../src/getInitials';
 import { darkOrLight } from '../src/darkOrLight';
+import { isEqual } from '../src/isEqual';
 
 import requestExamples from '../src/request/example';
 
@@ -110,6 +111,31 @@ async function runExamples() {
     const promise = asyncSimulation({ signal: controller.signal });
     controller.abort();
     promise.catch(err => console.error(err)); // true
+
+    // Test isEqual function
+    console.log('isEqual({ a: 1, b: [2, 3] }, { a: 1, b: [2, 3] })', isEqual({ a: 1, b: [2, 3] }, { a: 1, b: [2, 3] })); // true
+    console.log('isEqual({ a: 1, b: [2, 3] }, { b: [2, 3], a: 1 })', isEqual({ a: 1, b: [2, 3] }, { b: [2, 3], a: 1 })); // true
+    console.log('isEqual(NaN, NaN)', isEqual(NaN, NaN)); // true
+    console.log("isEqual(new Date('2020'), new Date('2020'))", isEqual(new Date('2020'), new Date('2020'))); // true
+    console.log('isEqual({ a: 1 }, { a: 1, b: undefined })', isEqual({ a: 1 }, { a: 1, b: undefined })); // false
+
+    // ✅ Works (Date in object)
+console.log(`isEqual(
+    { created_at: new Date('2023-01-01') },
+    { created_at: new Date('2023-01-01') }
+);`, isEqual(
+        { created_at: new Date('2023-01-01') },
+        { created_at: new Date('2023-01-01') }
+    )); // true
+
+    // ✅ Works (Date in array)
+console.log(`isEqual(
+    [new Date('2023-01-01')],
+    [new Date('2023-01-01')]
+);`, isEqual(
+    [new Date('2023-01-01')],
+    [new Date('2023-01-01')]
+)); // true
 
     console.log('--- Examples Complete ---');
 }

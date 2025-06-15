@@ -2,7 +2,7 @@
 
 ## Simple debounce
 
-```js
+```ts
 /**
  * Creates a debounce function that delays execution of the given function
  * until after the specified delay has passed since the last call.
