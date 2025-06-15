@@ -15,7 +15,8 @@
     "string",
     "object",
     "collection",
-    "cached"
+    "cached",
+    "debounce"
   ],
   "author": "Muhamad Husein <m.husein27@gmail.com>",
   "homepage": "https://github.com/M-Husein/q-js-utils#readme",
@@ -45,6 +46,16 @@
       "types": "./dist/cached.d.ts",
       "import": "./dist/cached.es.js",
       "require": "./dist/cached.cjs.js"
+    },
+    "./debounce": {
+      "types": "./dist/debounce.d.ts",
+      "import": "./dist/debounce.es.js",
+      "require": "./dist/debounce.cjs.js"
+    },
+    "./debounceAdvanced": {
+      "types": "./dist/debounceAdvanced.d.ts",
+      "import": "./dist/debounceAdvanced.es.js",
+      "require": "./dist/debounceAdvanced.cjs.js"
     },
     "./request": {
       "types": "./dist/request.d.ts",

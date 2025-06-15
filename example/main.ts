@@ -1,3 +1,5 @@
+import { debounce } from '../src/debounce';
+// import { debounceAdvanced } from '../src/debounceAdvanced';
 import { request } from '../src/request';
 import { nextId } from '../src/nextId';
 import { asyncSimulation } from '../src/asyncSimulation';
@@ -9,6 +11,16 @@ import requestExamples from '../src/request/example';
 
 async function runExamples() {
     console.log('--- Running Library Examples ---');
+
+    // Test debounce function
+    const handleResize = () => {
+        console.group('debounce');
+        console.log(`Window resized to: ${window.innerWidth}x${window.innerHeight}`);
+        console.groupEnd();
+    };
+    // Wait 250ms after resizing stops
+    const debouncedResize = debounce(handleResize, 250);
+    window.addEventListener('resize', debouncedResize);
 
     // Test request function
     try {
