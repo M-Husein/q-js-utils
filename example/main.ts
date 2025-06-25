@@ -116,26 +116,7 @@ async function runExamples() {
     console.log('isEqual({ a: 1, b: [2, 3] }, { a: 1, b: [2, 3] })', isEqual({ a: 1, b: [2, 3] }, { a: 1, b: [2, 3] })); // true
     console.log('isEqual({ a: 1, b: [2, 3] }, { b: [2, 3], a: 1 })', isEqual({ a: 1, b: [2, 3] }, { b: [2, 3], a: 1 })); // true
     console.log('isEqual(NaN, NaN)', isEqual(NaN, NaN)); // true
-    console.log("isEqual(new Date('2020'), new Date('2020'))", isEqual(new Date('2020'), new Date('2020'))); // true
     console.log('isEqual({ a: 1 }, { a: 1, b: undefined })', isEqual({ a: 1 }, { a: 1, b: undefined })); // false
-
-    // ✅ Works (Date in object)
-console.log(`isEqual(
-    { created_at: new Date('2023-01-01') },
-    { created_at: new Date('2023-01-01') }
-);`, isEqual(
-        { created_at: new Date('2023-01-01') },
-        { created_at: new Date('2023-01-01') }
-    )); // true
-
-    // ✅ Works (Date in array)
-console.log(`isEqual(
-    [new Date('2023-01-01')],
-    [new Date('2023-01-01')]
-);`, isEqual(
-    [new Date('2023-01-01')],
-    [new Date('2023-01-01')]
-)); // true
 
     console.log('--- Examples Complete ---');
 }
@@ -144,5 +125,5 @@ runExamples();
 
 const appDiv = document.getElementById('app');
 if (appDiv) {
-    appDiv.innerHTML += `<p>Examples executed. Check console.</p>`;
+    appDiv.innerHTML += '<p>Examples executed. Check console.</p>';
 }

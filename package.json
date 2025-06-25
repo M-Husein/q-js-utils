@@ -22,7 +22,8 @@
     "collection",
     "cached",
     "debounce",
-    "throttle"
+    "throttle",
+    "isEqual"
   ],
   "author": "Muhamad Husein <m.husein27@gmail.com>",
   "homepage": "https://github.com/M-Husein/q-js-utils#readme",
