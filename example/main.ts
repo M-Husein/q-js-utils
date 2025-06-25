@@ -67,9 +67,9 @@ async function runExamples() {
     console.groupEnd();
 
     // Test darkOrLight function
-    const isDarkOrLight1 = darkOrLight(color1);
-    const isDarkOrLight2 = darkOrLight(color2);
-    const isDarkOrLight3 = darkOrLight(color3);
+    const isDarkOrLight1 = color1 && darkOrLight(color1);
+    const isDarkOrLight2 = color2 && darkOrLight(color2);
+    const isDarkOrLight3 = color3 && darkOrLight(color3);
 
     console.group('darkOrLight');
     // Expected: 
@@ -115,7 +115,7 @@ async function runExamples() {
     // Test isEqual function
     console.log('isEqual({ a: 1, b: [2, 3] }, { a: 1, b: [2, 3] })', isEqual({ a: 1, b: [2, 3] }, { a: 1, b: [2, 3] })); // true
     console.log('isEqual({ a: 1, b: [2, 3] }, { b: [2, 3], a: 1 })', isEqual({ a: 1, b: [2, 3] }, { b: [2, 3], a: 1 })); // true
-    console.log('isEqual(NaN, NaN)', isEqual(NaN, NaN)); // true
+    console.log('isEqual(NaN, NaN)', isEqual(NaN, NaN)); // false
     console.log('isEqual({ a: 1 }, { a: 1, b: undefined })', isEqual({ a: 1 }, { a: 1, b: undefined })); // false
 
     console.log('--- Examples Complete ---');

@@ -284,9 +284,9 @@ console.log(`nextId to ${nextId('x')}`);
 ### cached
 
 ```js
-import { cachePrimitive } from 'q-js-utils/cachePrimitive';
+import { cache } from 'q-js-utils/cache';
 
-const sayHi = cachePrimitive(name => 'Hi, ' + name);
+const sayHi = cache(name => 'Hi, ' + name);
 ```
 
 ---
@@ -347,6 +347,6 @@ import { isEqual } from 'q-js-utils/isEqual';
 isEqual({ a: 1, b: [2, 3] }, { a: 1, b: [2, 3] }) // true
 isEqual({ a: 1 }, { a: 1, b: undefined }) // false
 isEqual({ a: 1, b: [2, 3] }, { b: [2, 3], a: 1 }) // true
-isEqual(NaN, NaN) // true
+isEqual(NaN, NaN) // false
 isEqual({ a: 1 }, { a: 1, b: undefined }) // false
 ```
