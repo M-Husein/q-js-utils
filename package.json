@@ -49,10 +49,20 @@
       "import": "./dist/number.es.js",
       "require": "./dist/number.cjs.js"
     },
-    "./cached": {
-      "types": "./dist/cached.d.ts",
-      "import": "./dist/cached.es.js",
-      "require": "./dist/cached.cjs.js"
+    "./cache": {
+      "types": "./dist/cache.d.ts",
+      "import": "./dist/cache.es.js",
+      "require": "./dist/cache.cjs.js"
+    },
+    "./cacheJSON": {
+      "types": "./dist/cacheJSON.d.ts",
+      "import": "./dist/cacheJSON.es.js",
+      "require": "./dist/cacheJSON.cjs.js"
+    },
+    "./cacheWeak": {
+      "types": "./dist/cacheWeak.d.ts",
+      "import": "./dist/cacheWeak.es.js",
+      "require": "./dist/cacheWeak.cjs.js"
     },
     "./debounce": {
       "types": "./dist/debounce.d.ts",
