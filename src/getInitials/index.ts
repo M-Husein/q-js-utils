@@ -1,4 +1,4 @@
-import { cache } from '../cached/cache';
+import { cache } from '../cache';
 
 /**
  * Get initial name
