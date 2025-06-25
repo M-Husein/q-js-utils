@@ -346,16 +346,7 @@ import { isEqual } from 'q-js-utils/isEqual';
 
 isEqual({ a: 1, b: [2, 3] }, { a: 1, b: [2, 3] }) // true
 isEqual({ a: 1 }, { a: 1, b: undefined }) // false
-
-// ✅ Works (Date in object)
-isEqual(
-  { created_at: new Date('2023-01-01') },
-  { created_at: new Date('2023-01-01') }
-); // true
-
-// ✅ Works (Date in array)
-isEqual(
-  [new Date('2023-01-01')],
-  [new Date('2023-01-01')]
-); // true
+isEqual({ a: 1, b: [2, 3] }, { b: [2, 3], a: 1 }) // true
+isEqual(NaN, NaN) // true
+isEqual({ a: 1 }, { a: 1, b: undefined }) // false
 ```

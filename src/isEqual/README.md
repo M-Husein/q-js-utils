@@ -139,33 +139,32 @@ If you want **maximum speed** and can guarantee no Dates in your data:
 ```ts
 export const ultraFastCompare = <T>(a: T, b: T): boolean => {
   // 1. Primitive comparison
-  if (a === b) return a !== 0 || 1 / (a as number) === 1 / (b as number);
-  
+  if (a === b) return true;
+
   // 2. Non-object termination
   if (typeof a !== 'object' || typeof b !== 'object' || a === null || b === null) return false;
 
   // 3. Array comparison
   if (Array.isArray(a) && Array.isArray(b)) {
     if (a.length !== b.length) return false;
-    
-    return a.every((item, i) => isEqual(item, b[i]));
+    for (let i = 0; i < a.length; i++) {
+      if (!isEqual(a[i], b[i])) return false;
+    }
+    return true;
   }
 
-  // 4. Object comparison (type-safe)
-  const aKeys = Object.keys(a as object);
-  const bKeys = Object.keys(b as object);
+  // 4. Object comparison (fully type-safe)
+  const aKeys = Object.keys(a) as Array<keyof typeof a>;
+  const bKeys = Object.keys(b) as Array<keyof typeof b>;
   if (aKeys.length !== bKeys.length) return false;
 
-  return aKeys.every(key => {
-    // Type-safe property access
-    const bObj = b as Record<string, unknown>;
-    if (!(key in bObj)) return false;
-    
-    return isEqual(
-      (a as Record<string, unknown>)[key],
-      bObj[key]
-    );
-  });
+  for (const key of aKeys) {
+    if (!(key in b)) return false;
+
+    if (!isEqual(a[key] as unknown, b[key] as unknown)) return false;
+  }
+
+  return true;
 };
 // ⚠️ Fails for Dates, but 10-15% faster than full version
 ```

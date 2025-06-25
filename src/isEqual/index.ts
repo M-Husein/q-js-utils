@@ -14,15 +14,18 @@ export const isEqual = <T>(a: T, b: T): boolean => {
   // 3. Array comparison
   if (Array.isArray(a) && Array.isArray(b)) {
     if (a.length !== b.length) return false;
+
     for (let i = 0; i < a.length; i++) {
       if (!isEqual(a[i], b[i])) return false;
     }
+
     return true;
   }
 
   // 4. Object comparison (fully type-safe)
   const aKeys = Object.keys(a) as Array<keyof typeof a>;
   const bKeys = Object.keys(b) as Array<keyof typeof b>;
+  
   if (aKeys.length !== bKeys.length) return false;
 
   for (const key of aKeys) {
