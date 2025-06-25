@@ -1,7 +1,7 @@
-import { cache } from '../cached/cache';
+import { cache } from '../cache';
 
 /**
- * String (e.g name) to hexa
+ * String (e.g name, username, nickname, fullname) to hexa
  * @param str string
  * @param no string
  * @returns 'Hexa string' | undefined
@@ -17,7 +17,7 @@ export const str2Hex = cache((str: any): string | undefined => {
     let color = '';
 
     for (let j = 0; j < 3; j++) {
-      const val = (hash >> (j * 8)) & 255;
+      let val = (hash >> (j * 8)) & 255;
       color += ('00' + val.toString(16)).slice(-2);
     }
 
