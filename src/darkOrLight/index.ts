@@ -1,10 +1,10 @@
-import { cachePrimitive } from '../cached/cachePrimitive';
+import { cache } from '../cached/cache';
 
 /**
  * @param color string
  * @returns  'dark' | 'light'
  */
-export const darkOrLight = cachePrimitive((color: any) => {
+export const darkOrLight = cache((color: any) => {
   // const colorStr = typeof color === 'number' 
   //   ? `#${color.toString(16).padStart(6, '0')}` 
   //   : color;

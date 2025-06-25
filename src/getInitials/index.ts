@@ -1,21 +1,15 @@
+import { cache } from '../cached/cache';
+
 /**
  * Get initial name
  * @param name string
  * @param no string
- * @returns 'Initial name'
+ * @returns 'Initial Name'
  */
-export const getInitials = (name: string, no = "?") => {
-  if(!name || !name.trim()){
-    return no;
-  }
-  
-  let [first, last] = name.split(" ");
+export const getInitials = cache((name: any) => {
+  if(name?.trim()){
+    let [first, last] = name.split(" ");
 
-  let initial = first[0];
-
-  if(first && last){
-    initial += last[0];
+    return (first[0] + (last?.[0] || '')).toUpperCase();
   }
-  
-  return initial;
-}
+}) as (name: string) => string | undefined;
