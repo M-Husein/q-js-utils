@@ -8,7 +8,9 @@ export default defineConfig({
       entry: {
         index: resolve(__dirname, 'src/index.ts'), // Main bundle
         number: resolve(__dirname, 'src/number/index.ts'),
-        cached: resolve(__dirname, 'src/cached/index.ts'),
+        cache: resolve(__dirname, 'src/cache/index.ts'),
+        cacheJSON: resolve(__dirname, 'src/cacheJSON/index.ts'),
+        cacheWeak: resolve(__dirname, 'src/cacheWeak/index.ts'),
         debounce: resolve(__dirname, 'src/debounce/index.ts'),
         debounceAdvanced: resolve(__dirname, 'src/debounceAdvanced/index.ts'),
         throttle: resolve(__dirname, 'src/throttle/index.ts'),
