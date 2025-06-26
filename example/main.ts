@@ -115,7 +115,7 @@ async function runExamples() {
     // Test isEqual function
     console.log('isEqual({ a: 1, b: [2, 3] }, { a: 1, b: [2, 3] })', isEqual({ a: 1, b: [2, 3] }, { a: 1, b: [2, 3] })); // true
     console.log('isEqual({ a: 1, b: [2, 3] }, { b: [2, 3], a: 1 })', isEqual({ a: 1, b: [2, 3] }, { b: [2, 3], a: 1 })); // true
-    console.log('isEqual(NaN, NaN)', isEqual(NaN, NaN)); // false
+    console.log('isEqual(NaN, NaN)', isEqual(NaN, NaN)); // true
     console.log('isEqual({ a: 1 }, { a: 1, b: undefined })', isEqual({ a: 1 }, { a: 1, b: undefined })); // false
 
     console.log('--- Examples Complete ---');
