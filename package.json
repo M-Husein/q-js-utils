@@ -1,6 +1,6 @@
 {
   "name": "q-js-utils",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "description": "A collection of JavaScript utilities.",
   "license": "MIT",
   "keywords": [
@@ -48,6 +48,11 @@
       "types": "./dist/number.d.ts",
       "import": "./dist/number.es.js",
       "require": "./dist/number.cjs.js"
+    },
+    "./isNumber": {
+      "types": "./dist/isNumber.d.ts",
+      "import": "./dist/isNumber.es.js",
+      "require": "./dist/isNumber.cjs.js"
     },
     "./cache": {
       "types": "./dist/cache.d.ts",

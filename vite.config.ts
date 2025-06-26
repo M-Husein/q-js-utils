@@ -8,6 +8,7 @@ export default defineConfig({
       entry: {
         index: resolve(__dirname, 'src/index.ts'), // Main bundle
         number: resolve(__dirname, 'src/number/index.ts'),
+        isNumber: resolve(__dirname, 'src/number/isNumber.ts'),
         cache: resolve(__dirname, 'src/cache/index.ts'),
         cacheJSON: resolve(__dirname, 'src/cacheJSON/index.ts'),
         cacheWeak: resolve(__dirname, 'src/cacheWeak/index.ts'),
