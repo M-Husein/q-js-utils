@@ -8,6 +8,7 @@ import { str2Hex } from '../src/str2Hex';
 import { getInitials } from '../src/getInitials';
 import { darkOrLight } from '../src/darkOrLight';
 import { isEqual } from '../src/isEqual';
+import { cn } from '../src/cn';
 
 import requestExamples from '../src/request/example';
 
@@ -117,6 +118,16 @@ async function runExamples() {
     console.log('isEqual({ a: 1, b: [2, 3] }, { b: [2, 3], a: 1 })', isEqual({ a: 1, b: [2, 3] }, { b: [2, 3], a: 1 })); // true
     console.log('isEqual(NaN, NaN)', isEqual(NaN, NaN)); // true
     console.log('isEqual({ a: 1 }, { a: 1, b: undefined })', isEqual({ a: 1 }, { a: 1, b: undefined })); // false
+
+    const isActive = true;
+    const hasError = false;
+    const zero = 0;
+
+    // Returns: "btn active" (when isActive is true and hasError is false)
+    console.log(cn('btn', isActive && 'active', hasError && 'error'));
+
+    // undefined
+    console.log(cn(zero && 'zero', hasError && 'error'));
 
     console.log('--- Examples Complete ---');
 }

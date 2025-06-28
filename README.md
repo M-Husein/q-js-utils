@@ -41,7 +41,9 @@ import { getInitials } from 'q-js-utils/getInitials';
 ### For numeric data
 
 ```js
-import { isNumber, isNegative, padWithLeadingZeros } from 'q-js-utils/number';
+import { isNumber } from 'q-js-utils/isNumber';
+import { isNegative } from 'q-js-utils/isNegative';
+import { padWithLeadingZeros } from 'q-js-utils/padWithLeadingZeros';
 
 const one = 1;
 const minus = -1;
@@ -348,4 +350,23 @@ isEqual({ a: 1, b: [2, 3] }, { a: 1, b: [2, 3] }) // true
 isEqual({ a: 1 }, { a: 1, b: undefined }) // false
 isEqual({ a: 1, b: [2, 3] }, { b: [2, 3], a: 1 }) // true
 isEqual(NaN, NaN) // true
+```
+
+### cn
+Joins class names together, filtering out falsy values.
+@param {...(string | boolean | null | undefined)} classes - Class names or conditional expressions.
+returns string Combined class names as a single string, or undefined (to prevent `class=""` not render in node).
+
+```js
+import { cn } from 'q-js-utils/cn';
+
+const isActive = true;
+const hasError = false;
+const zero = 0;
+
+// Returns: "btn active" (when isActive is true and hasError is false)
+cn('btn', isActive && 'active', hasError && 'error');
+
+// undefined
+cn(zero && 'zero', hasError && 'error');
 ```
