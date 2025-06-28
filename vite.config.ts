@@ -7,8 +7,10 @@ export default defineConfig({
     lib: {
       entry: {
         index: resolve(__dirname, 'src/index.ts'), // Main bundle
-        number: resolve(__dirname, 'src/number/index.ts'),
+        // number: resolve(__dirname, 'src/number/index.ts'),
         isNumber: resolve(__dirname, 'src/number/isNumber.ts'),
+        isNegative: resolve(__dirname, 'src/number/isNegative.ts'),
+        padWithLeadingZeros: resolve(__dirname, 'src/number/padWithLeadingZeros.ts'),
         cache: resolve(__dirname, 'src/cache/index.ts'),
         cacheJSON: resolve(__dirname, 'src/cacheJSON/index.ts'),
         cacheWeak: resolve(__dirname, 'src/cacheWeak/index.ts'),
@@ -23,6 +25,7 @@ export default defineConfig({
         str2Hex: resolve(__dirname, 'src/str2Hex/index.ts'),
         obj2FormData: resolve(__dirname, 'src/obj2FormData/index.ts'),
         isEqual: resolve(__dirname, 'src/isEqual/index.ts'),
+        cn: resolve(__dirname, 'src/cn/index.ts'),
       },
 
       // formats: ['es', 'cjs', 'umd', 'iife'],
@@ -37,12 +40,12 @@ export default defineConfig({
     minify: 'terser',
     terserOptions: {
       compress: {
-        // drop_console: true, // Optional: Remove console.log statements
-        drop_debugger: true, // Optional: Remove debugger statements
-        arrows: true,       // Converts functions to arrow functions
-        comparisons: true,  // Optimizes `typeof` checks, if false will Disables '==' optimization
-        conditionals: true, // Flattens nested ternaries
-        toplevel: true,     // Minifies top-level functions
+        // drop_console: true,   // Optional: Remove console.log statements
+        drop_debugger: true,  // Optional: Remove debugger statements
+        arrows: true,         // Converts functions to arrow functions
+        comparisons: true,    // Optimizes `typeof` checks, if false will Disables '==' optimization
+        conditionals: true,   // Flattens nested ternaries
+        toplevel: true,       // Minifies top-level functions
       },
       format: {
         comments: false, // Removes comments

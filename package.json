@@ -1,6 +1,6 @@
 {
   "name": "q-js-utils",
-  "version": "1.2.9",
+  "version": "1.3.0",
   "description": "A collection of JavaScript utilities.",
   "license": "MIT",
   "keywords": [
@@ -44,15 +44,20 @@
       "import": "./dist/index.es.js",
       "require": "./dist/index.cjs.js"
     },
-    "./number": {
-      "types": "./dist/number.d.ts",
-      "import": "./dist/number.es.js",
-      "require": "./dist/number.cjs.js"
-    },
     "./isNumber": {
       "types": "./dist/isNumber.d.ts",
       "import": "./dist/isNumber.es.js",
       "require": "./dist/isNumber.cjs.js"
+    },
+    "./isNegative": {
+      "types": "./dist/isNegative.d.ts",
+      "import": "./dist/isNegative.es.js",
+      "require": "./dist/isNegative.cjs.js"
+    },
+    "./padWithLeadingZeros": {
+      "types": "./dist/padWithLeadingZeros.d.ts",
+      "import": "./dist/padWithLeadingZeros.es.js",
+      "require": "./dist/padWithLeadingZeros.cjs.js"
     },
     "./cache": {
       "types": "./dist/cache.d.ts",
@@ -123,6 +128,11 @@
       "types": "./dist/isEqual.d.ts",
       "import": "./dist/isEqual.es.js",
       "require": "./dist/isEqual.cjs.js"
+    },
+    "./cn": {
+      "types": "./dist/cn.d.ts",
+      "import": "./dist/cn.es.js",
+      "require": "./dist/cn.cjs.js"
     }
   },
   "files": [
@@ -131,7 +141,7 @@
   "scripts": {
     "dev": "vite",
     "dev:example": "vite --config example/vite.config.ts",
-    "build": "vite build",
+    "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
