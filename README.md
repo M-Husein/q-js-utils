@@ -2,10 +2,16 @@
 
 A collection of JavaScript utilities.
 
-## Install
+## Installation
 
 ```bash
 npm install q-js-utils
+```
+
+**Or**
+
+```bash
+yarn add q-js-utils
 ```
 
 ## Usage
@@ -362,11 +368,22 @@ import { cn } from 'q-js-utils/cn';
 
 const isActive = true;
 const hasError = false;
+const emptyString = '';
 const zero = 0;
+const nullVar = null;
+const undefinedConst = undefined;
+let undefinedLet;
 
 // Returns: "btn active" (when isActive is true and hasError is false)
 cn('btn', isActive && 'active', hasError && 'error');
 
 // undefined
-cn(zero && 'zero', hasError && 'error');
+cn(
+  hasError && 'error',
+  emptyString && 'emptyString',
+  zero && 'zero',
+  nullVar && 'nullVar',
+  undefinedConst && 'undefinedConst',
+  undefinedLet && 'undefinedLet',
+);
 ```
