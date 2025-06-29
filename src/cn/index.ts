@@ -12,8 +12,3 @@ export const cn = (...classes: (string | boolean | number | null | undefined)[])
     return result.join(' ');
   }
 }
-
-// const cn = (...classes: (string | boolean | null | undefined)[]): string =>
-//   classes
-//     .filter((cls): cls is string => typeof cls === 'string' && cls.trim() !== '')
-//     .join(' ');

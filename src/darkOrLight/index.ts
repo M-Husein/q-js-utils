@@ -1,9 +1,9 @@
 import { cache } from '../cache';
 
-const regExp = /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/;
+const hexOrRgbRegExp = /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/;
 
 /**
- * @param color string
+ * @param color string CSS Color
  * @returns  'dark' | 'light'
  */
 export const darkOrLight = cache((color: any) => {
@@ -15,7 +15,7 @@ export const darkOrLight = cache((color: any) => {
   // Check the format of the color, HEX or RGB?
   if(color.match(/^rgb/)){
     // If HEX --> store the red, green, blue values in separate variables
-    color = color.match(regExp);
+    color = color.match(hexOrRgbRegExp);
 
     r = color[1];
     g = color[2];

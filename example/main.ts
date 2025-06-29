@@ -121,13 +121,26 @@ async function runExamples() {
 
     const isActive = true;
     const hasError = false;
+    const emptyString = '';
     const zero = 0;
+    const nullVar = null;
+    const undefinedConst = undefined;
+    let undefinedLet: any;
 
     // Returns: "btn active" (when isActive is true and hasError is false)
     console.log(cn('btn', isActive && 'active', hasError && 'error'));
 
     // undefined
-    console.log(cn(zero && 'zero', hasError && 'error'));
+    console.log(
+        cn(
+            hasError && 'error',
+            emptyString && 'emptyString',
+            zero && 'zero',
+            nullVar && 'nullVar',
+            undefinedConst && 'undefinedConst',
+            undefinedLet && 'undefinedLet',
+        )
+    );
 
     console.log('--- Examples Complete ---');
 }
