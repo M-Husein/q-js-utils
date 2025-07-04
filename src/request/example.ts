@@ -131,18 +131,20 @@ export default async function runExamples() {
   console.log('9. Using before and after hooks for a specific request');
   try {
     const response = await request('https://jsonplaceholder.typicode.com/comments/1', {
-      beforeHook: (requestOptions: RequestInit) => {
+      beforeHook: async (requestOptions: RequestInit) => {
         console.log(`[Specific Before Hook] Preparing request: `, requestOptions);
+        
+        // requestOptions.headers.Authorization = 'Bearer';
+        // (requestOptions.headers as Record<string, string>).Authorization = 'Bearer';
+        // requestOptions.headers.set('Authorization', 'Bearer ');
+
         // let token = await getToken();
         // if (token) {
         //   requestOptions.headers.set('Authorization', 'Bearer ' + token);
         // }
-        // return requestOptions;
-
-        // requestOptions.headers.Authorization = 'Bearer';
-        // (requestOptions.headers as Record<string, string>).Authorization = 'Bearer';
-        // requestOptions.headers.set('Authorization', 'Bearer ');
         (requestOptions.headers as Headers).set('Authorization', 'Bearer ');
+
+        return requestOptions;
       },
       afterHook: async (response) => { // , options
         console.log(`[Specific After Hook] Received response with status ${response.status}`);
