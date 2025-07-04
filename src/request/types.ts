@@ -1,5 +1,6 @@
 /**
  * Defines the supported HTTP methods.
+ * @NOTES : It is strongly recommended to consistently use uppercase HTTP methods.
  */
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
 
@@ -8,15 +9,7 @@ export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 
  * It can be an object (for JSON), FormData, URLSearchParams, binary data (Blob, ArrayBuffer),
  * or a plain string.
  */
-export type RequestBody =
-  | object
-  | FormData
-  | URLSearchParams
-  | Blob
-  | ArrayBuffer
-  | string
-  | null
-  | undefined;
+export type RequestBody = object | FormData | URLSearchParams | Blob | ArrayBuffer | string | null | undefined;
 
 /**
  * Type for query parameters. Supports a plain object where keys are strings
@@ -48,8 +41,8 @@ export type OnProgressCallback = (progress: DownloadProgress) => void;
  * @param options - The `RequestInit` object that will be passed to `fetch`.
  * @returns The (potentially modified) `RequestInit` object, or a Promise resolving to it.
  */
-export type BeforeHook = (options: RequestInit) => void;
-// export type BeforeHook = (url: string, options: RequestInit) => RequestInit | Promise<RequestInit>;
+export type BeforeHook = (options: RequestInit) => RequestInit | Promise<RequestInit>;
+// export type BeforeHook = (options: RequestInit) => void;
 
 /**
  * Hook function executed after a response is received, but before its body is parsed.
@@ -108,24 +101,15 @@ export interface ChainedFetchResponse {
  * Options specific to a single fetch request.
  * These extend the standard `RequestInit` interface and add custom functionalities.
  */
-export interface FetchOptions extends Omit<RequestInit, 'body'> {
-  /** Query parameters to append to the URL. */
-  query?: QueryParams;
-
+export interface FetchOptions extends Omit<RequestInit, 'body' | 'headers' | 'signal'> {
   /** The request payload (body). Can be an object (for JSON), FormData, etc. */
   body?: RequestBody;
 
   /**
-   * Request timeout in milliseconds. If the request takes longer than this, it will be aborted
-   * and an `AbortError` will be thrown. A value of `0` or `undefined` means no timeout.
+   * You explicitly destructure headers and use `new Headers(headers)`.
+   * `HeadersInit` allows string[][], Record<string, string>, or Headers.
    */
-  timeout?: number;
-
-  /**
-   * Callback function for download progress updates.
-   * This is active only if the response has a `Content-Length` header.
-   */
-  onProgress?: OnProgressCallback;
+  headers?: HeadersInit; 
 
   /**
    * An external `AbortSignal` to control the request lifecycle.
@@ -133,6 +117,15 @@ export interface FetchOptions extends Omit<RequestInit, 'body'> {
    * `AbortController` if `timeout` is also set.
    */
   signal?: AbortSignal;
+
+  /** Query parameters to append to the URL. */
+  query?: QueryParams;
+
+  /**
+   * Request timeout in milliseconds. If the request takes longer than this, it will be aborted
+   * and an `AbortError` will be thrown. A value of `0` or `undefined` means no timeout.
+   */
+  timeout?: number;
 
   /**
    * A hook function executed before this specific request is made.
@@ -145,4 +138,10 @@ export interface FetchOptions extends Omit<RequestInit, 'body'> {
    * but before its body is parsed. Can modify the response.
    */
   afterHook?: AfterHook;
+
+  /**
+   * Callback function for download progress updates.
+   * This is active only if the response has a `Content-Length` header.
+   */
+  onProgress?: OnProgressCallback;
 }
