@@ -1,7 +1,7 @@
 # q-js-utils
 
-<a href="https://www.npmjs.com/package/q-js-utils"><img src="https://img.shields.io/npm/dt/q-js-utils" alt="Total Downloads"></a>
 <a href="https://www.npmjs.com/package/q-js-utils"><img src="https://img.shields.io/npm/v/q-js-utils" alt="Latest Stable Version"></a>
+<a href="https://www.npmjs.com/package/q-js-utils"><img src="https://img.shields.io/npm/dt/q-js-utils" alt="Total Downloads"></a>
 <a href="https://www.npmjs.com/package/q-js-utils"><img src="https://img.shields.io/npm/l/q-js-utils" alt="License"></a>
 
 A collection of JavaScript utilities.

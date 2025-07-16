@@ -134,7 +134,7 @@ export default async function runExamples() {
     const response = await request('https://jsonplaceholder.typicode.com/comments/5', {
       // credentials: "include",
       query: {
-        q: "Searching"
+        q: "Cool"
       },
       // url, 
       beforeHook: async ({ query, headers }) => { // requestOptions: RequestInit, query?: QueryParams | RequestInit | FetchOptions
@@ -148,6 +148,7 @@ export default async function runExamples() {
         // if (token) {
         //   requestOptions.headers.set('Authorization', 'Bearer ' + token);
         // }
+
         (headers as Headers).set('Authorization', 'Bearer DUMMY_TOKEN');
 
         /** @OPTION : For csrf token */
@@ -173,8 +174,6 @@ export default async function runExamples() {
           }else{
             query = { lang };
           }
-
-          // url += (url.includes('?') ? '&' : '?') + 'lang=' + lang;
         }
 
         // console.log('query: ', query);
