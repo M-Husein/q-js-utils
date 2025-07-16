@@ -1,4 +1,5 @@
 import { request } from './index';
+// import { FetchOptions, QueryParams } from './types';
 // import { NormalizedRequestOptions } from './types';
 
 export default async function runExamples() {
@@ -130,9 +131,14 @@ export default async function runExamples() {
   // 9. Using before and after hooks for a specific request
   console.log('9. Using before and after hooks for a specific request');
   try {
-    const response = await request('https://jsonplaceholder.typicode.com/comments/1', {
-      beforeHook: async (requestOptions: RequestInit) => {
-        console.log(`[Specific Before Hook] Preparing request: `, requestOptions);
+    const response = await request('https://jsonplaceholder.typicode.com/comments/5', {
+      // credentials: "include",
+      query: {
+        q: "Searching"
+      },
+      // url, 
+      beforeHook: async ({ query, headers }) => { // requestOptions: RequestInit, query?: QueryParams | RequestInit | FetchOptions
+        console.log(`[Specific Before Hook] Preparing request headers: `, headers);
         
         // requestOptions.headers.Authorization = 'Bearer';
         // (requestOptions.headers as Record<string, string>).Authorization = 'Bearer';
@@ -142,9 +148,41 @@ export default async function runExamples() {
         // if (token) {
         //   requestOptions.headers.set('Authorization', 'Bearer ' + token);
         // }
-        (requestOptions.headers as Headers).set('Authorization', 'Bearer ');
+        (headers as Headers).set('Authorization', 'Bearer DUMMY_TOKEN');
 
-        return requestOptions;
+        /** @OPTION : For csrf token */
+        // request.credentials === "include" && 
+        // if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(request.method)){
+        //   const csrfToken = Cookies.get('XSRF-TOKEN') as string;
+        //   if(csrfToken){
+        //     request.headers.set('X-XSRF-TOKEN', decodeURIComponent(csrfToken));
+        //   }
+        // }
+
+        // const setAppLang = (): { ['lang']: string } | {} => {
+        //   const lang = new URLSearchParams(location.search).get('lang') as string;
+        //   return lang ? { lang } : {};
+        // }
+
+        // console.log('query: ', query);
+
+        const lang = new URLSearchParams(location.search).get('lang') as string;
+        if(lang){
+          if(query){
+            query.lang = lang;
+          }else{
+            query = { lang };
+          }
+
+          // url += (url.includes('?') ? '&' : '?') + 'lang=' + lang;
+        }
+
+        // console.log('query: ', query);
+
+        // Return the modified object
+        // return { url, query, options };
+
+        // return requestOptions;
       },
       afterHook: async (response) => { // , options
         console.log(`[Specific After Hook] Received response with status ${response.status}`);

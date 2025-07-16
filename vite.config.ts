@@ -26,6 +26,7 @@ export default defineConfig({
         obj2FormData: resolve(__dirname, 'src/obj2FormData/index.ts'),
         isEqual: resolve(__dirname, 'src/isEqual/index.ts'),
         cn: resolve(__dirname, 'src/cn/index.ts'),
+        download: resolve(__dirname, 'src/download/index.ts'),
       },
 
       // formats: ['es', 'cjs', 'umd', 'iife'],

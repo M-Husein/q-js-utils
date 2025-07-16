@@ -4,6 +4,8 @@ Performs an HTTP request with extended features, optimized for performance. It p
 
 This function returns a `ChainedFetchResponse` object, which allows chaining methods like `.json()`, `.text()`, etc., to conveniently consume the response body. Network errors, request timeouts, and non-2xx HTTP statuses (`response.ok` is false).
 
+## Code
+
 ```ts
 /**
  * @param url - The URL for the request. Can be a relative path (e.g., '/api/data')
@@ -138,6 +140,228 @@ export const request = (
       finally {
         // Always clear the timeout if it was set to prevent memory leaks.
         if (timeoutId) clearTimeout(timeoutId);
+      }
+    })()
+  );
+}
+```
+
+## Option 1
+
+This option with return `url`, `query`, and `options` in `beforeHook`.
+
+```ts
+/**
+ * Interface for the parameters passed to the beforeHook.
+ * This encapsulates all the mutable parts of the request to allow
+ * the hook to modify them.
+ */
+export interface BeforeHookParams {
+  url: string;
+  query?: QueryParams; // Optional as per your original design
+  options: RequestInit;
+}
+
+/**
+ * Hook function executed before a request is made.
+ * It can modify the URL, query parameters, or `RequestInit` options.
+ * @param params - An object containing the current url, query, and options.
+ * @returns An object containing the (potentially modified) url, query, and options, or a Promise resolving to it.
+ */
+export type BeforeHook = (params: BeforeHookParams) => BeforeHookParams | Promise<BeforeHookParams>;
+```
+
+```ts
+import { FetchOptions, ChainedFetchResponse, BeforeHookParams } from './types';
+import { appendQueryParams, processRequestBody, handleProgress } from './utils';
+
+export const request = (
+  url: string,
+  {
+    headers = {}, // Default to an empty object for headers
+    signal: externalSignal, // External AbortSignal provided by the caller
+    query, // Query parameters to append to the URL
+    timeout, // Request timeout in milliseconds
+    beforeHook, // Hook executed before the request
+    afterHook, // Hook executed after the response
+    onProgress, // Download progress callback
+    ...options // Remaining standard RequestInit properties (e.g., method, body, cache, credentials)
+  }: FetchOptions = {} // Default to an empty options object
+): ChainedFetchResponse => {
+  return new FetchResponse(
+    (async (): Promise<Response> => {
+      // Step 1: Create the initial RequestInit object
+      let finalOptions = {
+        ...options,
+        headers: new Headers(headers)
+      } as RequestInit;
+      
+      // Step 2: Run the beforeHook to get the final parameters
+      // This is the correct placement to allow modification of url, query, and options
+      if (beforeHook) {
+        const hookResult = await beforeHook({
+          url,
+          query,
+          options: finalOptions
+        });
+        
+        // Reassign the local variables with the modified values from the hook
+        url = hookResult.url;
+        query = hookResult.query;
+        finalOptions = hookResult.options;
+      }
+
+      // Step 3: Process the request body. This must run after the hook.
+      processRequestBody(finalOptions);
+
+      // Step 4: AbortController and timeout logic
+      let internalController: AbortController | undefined;
+      let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+      const hasTimeout = timeout && timeout > 0;
+
+      if (hasTimeout || !!externalSignal) {
+        internalController = new AbortController();
+
+        if (externalSignal) {
+          externalSignal.addEventListener('abort', () => internalController!.abort());
+        }
+
+        if (hasTimeout) {
+          timeoutId = setTimeout(() => internalController!.abort(), timeout);
+        }
+      }
+
+      finalOptions.signal = internalController?.signal;
+
+      // Step 5: Execute fetch
+      let response: Response;
+      try {
+        response = await fetch(
+          appendQueryParams(url, query),
+          finalOptions
+        );
+
+        // Step 6: Post-fetch logic
+        if (onProgress && response.body && response.headers.has('Content-Length')) {
+          response = await handleProgress(response, onProgress);
+        }
+
+        if (afterHook) {
+          response = await afterHook(response, finalOptions);
+        }
+        
+        if (response.ok) {
+          return response;
+        }
+
+        let err: any = new Error('Fetch failed');
+        err.name = 'FetchError';
+        err.status = response.status;
+        err.statusText = response.statusText;
+        err.data = await response.json().catch(() => null);
+        throw err;
+      } 
+      catch (error) {
+        throw error;
+      } 
+      finally {
+        if (timeoutId) clearTimeout(timeoutId);
+      }
+    })()
+  );
+};
+```
+
+**OR**
+
+```ts
+// File: index.ts
+
+// ... other imports ...
+import { FetchOptions, ChainedFetchResponse, BeforeHookParams } from './types'; // Import the new type
+
+export const request = (
+  url: string,
+  {
+    headers = {},
+    signal: externalSignal,
+    query,
+    timeout,
+    beforeHook,
+    afterHook,
+    onProgress,
+    ...options
+  }: FetchOptions = {}
+): ChainedFetchResponse => {
+  return new FetchResponse(
+    (async (): Promise<Response> => {
+      let finalOptions = {
+        ...options,
+        headers: new Headers(headers)
+      } as RequestInit;
+
+      // Process the request body.
+      processRequestBody(finalOptions);
+
+      // --- NEW LOGIC FOR THE beforeHook ---
+      let finalUrl = url;
+      let finalQuery = query;
+
+      if (beforeHook) {
+        const hookResult = await beforeHook({
+          url: finalUrl,
+          query: finalQuery,
+          options: finalOptions
+        });
+        // Update the variables with the modified values returned from the hook
+        finalUrl = hookResult.url;
+        finalQuery = hookResult.query;
+        finalOptions = hookResult.options;
+      }
+      // --- END OF NEW LOGIC ---
+
+      let internalController: AbortController | undefined;
+      let timeoutId: ReturnType<typeof setTimeout> | undefined;
+      const hasTimeout = timeout && timeout > 0;
+      if(hasTimeout || !!externalSignal){
+        internalController = new AbortController();
+        if(externalSignal){
+          externalSignal.addEventListener('abort', () => internalController!.abort());
+        }
+        if(hasTimeout){
+          timeoutId = setTimeout(() => internalController!.abort(), timeout);
+        }
+      }
+      finalOptions.signal = internalController?.signal;
+
+      let response: Response;
+      try {
+        response = await fetch(
+          appendQueryParams(finalUrl, finalQuery), // Use the potentially modified url and query
+          finalOptions
+        );
+        
+        // ... rest of the code is the same ...
+        if(onProgress && response.body && response.headers.has('Content-Length')){
+          response = await handleProgress(response, onProgress);
+        }
+        if(afterHook){
+          response = await afterHook(response, finalOptions);
+        }
+        if(response.ok){
+          return response;
+        }
+        let err: any = new Error('Fetch failed');
+        err.name = 'FetchError';
+        err.status = response.status;
+        err.statusText = response.statusText;
+        err.data = await response.json().catch(() => null);
+        throw err;
+      } catch(err) {
+        throw err;
+      } finally {
+        if(timeoutId) clearTimeout(timeoutId);
       }
     })()
   );

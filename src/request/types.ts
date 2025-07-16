@@ -30,6 +30,23 @@ export interface DownloadProgress {
 }
 
 /**
+ * Interface for the parameters passed to the beforeHook.
+ * This encapsulates all the mutable parts of the request to allow
+ * the hook to modify them.
+ */
+export interface BeforeHookParams {
+  query?: QueryParams;
+  headers?: HeadersInit
+}
+
+// Options
+// export interface BeforeHookParams {
+//   url: string;
+//   query?: QueryParams; // Optional as per your original design
+//   options: RequestInit;
+// }
+
+/**
  * Callback function for download progress updates.
  * @param progress - An object containing loaded, total, and progress percentage.
  */
@@ -37,12 +54,17 @@ export type OnProgressCallback = (progress: DownloadProgress) => void;
 
 /**
  * Hook function executed before a request is made.
- * It can modify the URL or `RequestInit` options.
+ * It can modify `RequestInit` options or the URL.
+ * @param url - The URL to `fetch`.
+ * @param query - SearchParam in the URL to `fetch`.
  * @param options - The `RequestInit` object that will be passed to `fetch`.
  * @returns The (potentially modified) `RequestInit` object, or a Promise resolving to it.
  */
-export type BeforeHook = (options: RequestInit) => RequestInit | Promise<RequestInit>;
-// export type BeforeHook = (options: RequestInit) => void;
+export type BeforeHook = (params: BeforeHookParams) => void | Promise<void>;
+
+// Options
+// export type BeforeHook = (params: BeforeHookParams) => BeforeHookParams | Promise<BeforeHookParams>;
+// export type BeforeHook = (options: RequestInit) => RequestInit | Promise<RequestInit>;
 
 /**
  * Hook function executed after a response is received, but before its body is parsed.

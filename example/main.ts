@@ -9,6 +9,7 @@ import { getInitials } from '../src/getInitials';
 import { darkOrLight } from '../src/darkOrLight';
 import { isEqual } from '../src/isEqual';
 import { cn } from '../src/cn';
+import { download } from '../src/download';
 
 import requestExamples from '../src/request/example';
 
@@ -22,6 +23,27 @@ async function runExamples() {
     document.body.appendChild(fragment);
 
     console.log('--- Running Library Examples ---');
+
+    const fileInput = document.getElementById('fileInput');
+    const btnDownload = document.getElementById('btnDownload');
+
+    let fileInputValue: any;
+
+    if(fileInput){
+        fileInput.addEventListener('change', (e: any) => {
+            fileInputValue = e.target.files[0];
+        });
+    }
+
+    if(btnDownload){
+        btnDownload.addEventListener('click', async () => {
+            const downloadFile = await download(fileInputValue);
+            console.log('downloadFile:', downloadFile);
+            if(downloadFile){
+                fileInputValue = ""; // Reset input file
+            }
+        });
+    }
 
     // Test debounce function
     const handleResize = () => {
@@ -39,23 +61,12 @@ async function runExamples() {
     }, 100);
     window.addEventListener('scroll', () => throttledScroll(window.scrollY));
 
-    // Test request function
-    try {
-        const todo = await request('https://jsonplaceholder.typicode.com/todos/1').json();
-        console.log('request Todo:', todo);
-    } catch (error) {
-        console.error('request Error:', error);
-    }
-
-    await requestExamples();
-
-    // 
+    // Test str2Hex function
 
     const name1 = 'Muhamad Husein';
     const name2 = 'Tony Stark';
     const name3 = 'Steve Roger';
 
-    // Test str2Hex function
     console.group('str2Hex');
     const color1 = str2Hex(name1);
     const color2 = str2Hex(name2);
@@ -141,6 +152,18 @@ async function runExamples() {
             undefinedLet && 'undefinedLet',
         )
     );
+
+    // Test request function
+    try {
+        const todo = await request('https://jsonplaceholder.typicode.com/todos/1').json();
+        console.log('request Todo:', todo);
+    } catch (error) {
+        console.error('request Error:', error);
+    }
+
+    await requestExamples();
+
+    //
 
     console.log('--- Examples Complete ---');
 }

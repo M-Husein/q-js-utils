@@ -14,6 +14,7 @@ export * from './str2Hex';
 export * from './obj2FormData';
 export * from './isEqual';
 export * from './cn';
+export * from './download';
 
 // Re-export common types (if they are not already re-exported via a module)
 export * from './common-types';
