@@ -1,5 +1,9 @@
 # q-js-utils
 
+<a href="https://www.npmjs.com/package/q-js-utils"><img src="https://img.shields.io/npm/v/q-js-utils" alt="Latest Stable Version"></a>
+<a href="https://www.npmjs.com/package/q-js-utils"><img src="https://img.shields.io/npm/dt/q-js-utils" alt="Total Downloads"></a>
+<a href="https://www.npmjs.com/package/q-js-utils"><img src="https://img.shields.io/npm/l/q-js-utils" alt="License"></a>
+
 A collection of JavaScript utilities.
 
 ## Installation
@@ -18,7 +22,7 @@ yarn add q-js-utils
 
 For the entire library (convenience, but potentially larger bundle if not tree-shaken by consumer's bundler):
 
-```js
+```ts
 import { darkOrLight, str2Hex, getInitials } from 'q-js-utils';
 // Or
 // import * as utils from 'q-js-utils';
@@ -46,7 +50,7 @@ import { getInitials } from 'q-js-utils/getInitials';
 
 ### For numeric data
 
-```js
+```ts
 import { isNumber } from 'q-js-utils/isNumber';
 import { isNegative } from 'q-js-utils/isNegative';
 import { padWithLeadingZeros } from 'q-js-utils/padWithLeadingZeros';
@@ -67,7 +71,7 @@ console.log(padWithLeadingZeros(one)); // '01'
 ### debounce
 
 **Debouncing an input for an autocomplete search**
-```js
+```ts
 import { debounce } from 'q-js-utils/debounce';
 
 const searchInput = document.getElementById('searchInput') as HTMLInputElement;
@@ -88,7 +92,7 @@ if (searchInput) {
 ```
 
 **Debouncing a window resize event**
-```js
+```ts
 import { debounce } from 'q-js-utils/debounce';
 
 const handleResize = () => {
@@ -104,7 +108,7 @@ window.addEventListener('resize', debouncedResize);
 ### debounceAdvanced
 
 **Resetting a Form Before Debounced Submission**
-```js
+```ts
 import { debounceAdvanced } from 'q-js-utils/debounceAdvanced';
 
 const submitForm = debounceAdvanced(
@@ -118,7 +122,7 @@ submitForm.cancel(); // Stops the submission if the form was reset
 ```
 
 **Avoiding Unnecessary Resize/Scroll Handlers**
-```js
+```ts
 import { debounceAdvanced } from 'q-js-utils/debounceAdvanced';
 
 const logScrollPosition = debounceAdvanced(
@@ -134,7 +138,7 @@ logScrollPosition.cancel(); // Cleanup
 ```
 
 **Game Input Handling (Cancel on Player Death)**
-```js
+```ts
 import { debounceAdvanced } from 'q-js-utils/debounceAdvanced';
 
 const shootBullet = debounceAdvanced(
@@ -155,7 +159,7 @@ shootBullet.cancel(); // Prevents queued shots
 ### throttle
 
 **Basic usage**
-```js
+```ts
 import { throttle } from 'q-js-utils/throttle';
 
 const throttledScroll = throttle((position: number) => {
@@ -166,7 +170,7 @@ window.addEventListener('scroll', () => throttledScroll(window.scrollY));
 ```
 
 **With default wait time (300ms)**
-```js
+```ts
 import { throttle } from 'q-js-utils/throttle';
 
 const throttledClick = throttle(() => console.log('Clicked!'));
@@ -178,7 +182,7 @@ button.addEventListener('click', throttledClick);
 ### throttleAdvanced
 
 **Cancellation Support (`cancel()`)**
-```js
+```ts
 import { throttleAdvanced } from 'q-js-utils/throttleAdvanced';
 
 const throttledScroll = throttleAdvanced(handleScroll, 100);
@@ -189,7 +193,7 @@ throttledScroll.cancel(); // Stops any pending execution
 ```
 
 **Immediate Execution (`flush()`)**
-```js
+```ts
 import { throttleAdvanced } from 'q-js-utils/throttleAdvanced';
 
 const throttledApiCall = throttleAdvanced(fetchData, 1000);
@@ -200,7 +204,7 @@ throttledApiCall.flush();
 ```
 
 **Pending Check (`pending()`)**
-```js
+```ts
 if (throttledFn.pending()) {
   console.log("Waiting to execute...");
 }
@@ -209,7 +213,7 @@ if (throttledFn.pending()) {
 ### Example Use Cases:
 
 **Cancellable Scroll Handler**
-```js
+```ts
 import { throttleAdvanced } from 'q-js-utils/throttleAdvanced';
 
 const scrollHandler = throttleAdvanced((position: number) => {
@@ -225,7 +229,7 @@ window.addEventListener('beforeunload', () => {
 ```
 
 **Throttled API Calls with Manual Flush**
-```js
+```ts
 import { throttleAdvanced } from 'q-js-utils/throttleAdvanced';
 
 const searchAPI = throttleAdvanced(async (query: string) => {
@@ -244,7 +248,7 @@ searchButton.addEventListener('click', () => {
 ```
 
 **Game Loop with Cancellation**
-```js
+```ts
 import { throttleAdvanced } from 'q-js-utils/throttleAdvanced';
 
 const gameUpdate = throttleAdvanced((deltaTime: number) => {
@@ -263,7 +267,7 @@ pauseButton.addEventListener('click', () => {
 
 ### request
 
-```js
+```ts
 import { request } from 'q-js-utils/request';
 
 try {
@@ -279,7 +283,7 @@ try {
 ### nextId
 Generates a unique, sequentially incremented string ID with an optional prefix. Each call increments an internal counter to ensure uniqueness.
 
-```js
+```ts
 import { nextId } from '../src/nextId';
 
 console.log(`nextId to ${nextId()}`);
@@ -291,7 +295,7 @@ console.log(`nextId to ${nextId('x')}`);
 
 ### cached
 
-```js
+```ts
 import { cache } from 'q-js-utils/cache';
 
 const sayHi = cache(name => 'Hi, ' + name);
@@ -301,7 +305,7 @@ const sayHi = cache(name => 'Hi, ' + name);
 
 ### darkOrLight
 
-```js
+```ts
 import { darkOrLight } from 'q-js-utils/darkOrLight';
 
 const isDark = darkOrLight('#000');
@@ -311,7 +315,7 @@ const isDark = darkOrLight('#000');
 
 ### str2Hex
 
-```js
+```ts
 import { str2Hex } from 'q-js-utils/str2Hex';
 
 const nameToHex = str2Hex('Muhamad Husein');
@@ -321,7 +325,7 @@ const nameToHex = str2Hex('Muhamad Husein');
 
 ### getInitials
 
-```js
+```ts
 import { getInitials } from 'q-js-utils/getInitials';
 
 const initialName = getInitials('Muhamad Husein');
@@ -331,7 +335,7 @@ const initialName = getInitials('Muhamad Husein');
 
 ### obj2FormData
 
-```js
+```ts
 import { obj2FormData } from 'q-js-utils/obj2FormData';
 
 const objData = {
@@ -349,7 +353,7 @@ Handles primitives, arrays, objects, Maps, Sets, Dates, RegExps, and circular re
 
 Can be significantly faster than Lodash's `_.isEqual()` in most cases, while still handling all the same edge cases.
 
-```js
+```ts
 import { isEqual } from 'q-js-utils/isEqual';
 
 isEqual({ a: 1, b: [2, 3] }, { a: 1, b: [2, 3] }) // true
@@ -363,7 +367,7 @@ Joins class names together, filtering out falsy values.
 @param {...(string | boolean | null | undefined)} classes - Class names or conditional expressions.
 returns string Combined class names as a single string, or undefined (to prevent `class=""` not render in node).
 
-```js
+```ts
 import { cn } from 'q-js-utils/cn';
 
 const isActive = true;
@@ -386,4 +390,65 @@ cn(
   undefinedConst && 'undefinedConst',
   undefinedLet && 'undefinedLet',
 );
+```
+
+### download
+Triggers a file download from a given Blob or File object in modern browsers.
+
+```ts
+import { download } from 'q-js-utils/download';
+
+// Basic
+download(text);
+
+// Custom filename
+download(text, {
+  name: "greeting.txt"
+});
+
+// Custom timeout to cleanup createObjectURL
+download(text, {
+  timeout: 1000,
+});
+
+// Whether to append anchor to DOM for Safari compatibility
+download(text, {
+  append: true,
+});
+
+// All
+download(text, {
+  name: "greeting.txt",
+  timeout: 1000,
+  append: true,
+});
+```
+
+### shape
+Shapes an object by picking or omitting specified keys, with TypeScript inferring exact key types.
+
+```ts
+import { shape } from 'q-js-utils/shape';
+
+const user = {
+  id: 1,
+  name: "Husein",
+  email: "husein@example.com",
+  role: "admin",
+};
+
+const pick = shape(user, ["id", "name"] as const); // { id: 1; name: "Husein" }
+
+const omit = shape(user, ["id", "name"] as const, true); // { email: "husein@example.com"; role: "admin" }
+```
+
+### capitalize
+Capitalizes the first letter.
+
+```ts
+import { capitalize } from 'q-js-utils/capitalize';
+
+console.log(capitalize("husein"));     // Husein
+console.log(capitalize("élève"));      // "Élève"
+console.log(capitalize("mañana"));     // "Mañana"
 ```

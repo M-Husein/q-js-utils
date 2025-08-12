@@ -1,4 +1,4 @@
-import { FetchOptions, ChainedFetchResponse } from './types';
+import { FetchOptions, ChainedFetchResponse, BeforeHookParams } from './types';
 import { appendQueryParams, processRequestBody, handleProgress } from './utils';
 
 /**
@@ -92,7 +92,7 @@ export const request = (
   {
     headers = {}, // Default to an empty object for headers
     signal: externalSignal, // External AbortSignal provided by the caller
-    query, // Query parameters to append to the URL
+    query = {}, // Query parameters to append to the URL
     timeout, // Request timeout in milliseconds
     beforeHook, // Hook executed before the request
     afterHook, // Hook executed after the response
@@ -106,6 +106,16 @@ export const request = (
         ...options,
         headers: new Headers(headers)
       } as RequestInit;
+
+      let requestParams: BeforeHookParams = { 
+        query, 
+        headers: finalOptions.headers
+      };
+
+      // Execute Before Hook if defined. It can modify `query` or `headers`.
+      if (beforeHook) {
+        await beforeHook(requestParams);
+      }
 
       // Process the request body (e.g., JSON.stringify, FormData handling)
       // and set the appropriate Content-Type header.
@@ -130,15 +140,10 @@ export const request = (
 
       finalOptions.signal = internalController?.signal;
 
-      // Execute Before Hook if defined. It can modify `finalOptions`.
-      if (beforeHook) {
-        finalOptions = await beforeHook(finalOptions);
-      }
-
       let response: Response;
       try {
         response = await fetch(
-          appendQueryParams(url, query), // Append query parameters to the URL string
+          appendQueryParams(url, requestParams.query),
           finalOptions
         );
 
@@ -158,7 +163,7 @@ export const request = (
         }
 
         // Handle Non-OK HTTP Responses (e.g., 404, 500).
-        let err: any = new Error('Fetch failed'); // , { cause: "FetchError" }
+        let err: any = new Error('Fetch failed');
 
         // Attach specific, commonly used properties directly for convenience
         err.name = 'FetchError';

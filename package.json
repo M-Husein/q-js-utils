@@ -1,6 +1,6 @@
 {
   "name": "q-js-utils",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "A collection of JavaScript utilities.",
   "license": "MIT",
   "keywords": [
@@ -23,7 +23,9 @@
     "cached",
     "debounce",
     "throttle",
-    "isEqual"
+    "isEqual",
+    "download",
+    "shape"
   ],
   "author": "Muhamad Husein <m.husein27@gmail.com>",
   "homepage": "https://github.com/M-Husein/q-js-utils#readme",
@@ -133,6 +135,21 @@
       "types": "./dist/cn.d.ts",
       "import": "./dist/cn.es.js",
       "require": "./dist/cn.cjs.js"
+    },
+    "./download": {
+      "types": "./dist/download.d.ts",
+      "import": "./dist/download.es.js",
+      "require": "./dist/download.cjs.js"
+    },
+    "./shape": {
+      "types": "./dist/shape.d.ts",
+      "import": "./dist/shape.es.js",
+      "require": "./dist/shape.cjs.js"
+    },
+    "./capitalize": {
+      "types": "./dist/capitalize.d.ts",
+      "import": "./dist/capitalize.es.js",
+      "require": "./dist/capitalize.cjs.js"
     }
   },
   "files": [

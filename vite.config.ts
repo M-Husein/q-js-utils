@@ -26,6 +26,11 @@ export default defineConfig({
         obj2FormData: resolve(__dirname, 'src/obj2FormData/index.ts'),
         isEqual: resolve(__dirname, 'src/isEqual/index.ts'),
         cn: resolve(__dirname, 'src/cn/index.ts'),
+        download: resolve(__dirname, 'src/download/index.ts'),
+        // pick: resolve(__dirname, 'src/omit/pick.ts'),
+        // omit: resolve(__dirname, 'src/omit/index.ts'),
+        shape: resolve(__dirname, 'src/shape/index.ts'),
+        capitalize: resolve(__dirname, 'src/capitalize/index.ts'),
       },
 
       // formats: ['es', 'cjs', 'umd', 'iife'],
