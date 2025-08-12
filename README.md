@@ -423,3 +423,32 @@ download(text, {
   append: true,
 });
 ```
+
+### shape
+Shapes an object by picking or omitting specified keys, with TypeScript inferring exact key types.
+
+```ts
+import { shape } from 'q-js-utils/shape';
+
+const user = {
+  id: 1,
+  name: "Husein",
+  email: "husein@example.com",
+  role: "admin",
+};
+
+const pick = shape(user, ["id", "name"] as const); // { id: 1; name: "Husein" }
+
+const omit = shape(user, ["id", "name"] as const, true); // { email: "husein@example.com"; role: "admin" }
+```
+
+### capitalize
+Capitalizes the first letter.
+
+```ts
+import { capitalize } from 'q-js-utils/capitalize';
+
+console.log(capitalize("husein"));     // Husein
+console.log(capitalize("élève"));      // "Élève"
+console.log(capitalize("mañana"));     // "Mañana"
+```
