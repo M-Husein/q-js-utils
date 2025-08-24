@@ -30,7 +30,9 @@ export default defineConfig({
         // pick: resolve(__dirname, 'src/omit/pick.ts'),
         // omit: resolve(__dirname, 'src/omit/index.ts'),
         shape: resolve(__dirname, 'src/shape/index.ts'),
+        mapSort: resolve(__dirname, 'src/mapSort/index.ts'),
         capitalize: resolve(__dirname, 'src/capitalize/index.ts'),
+        copyStyles: resolve(__dirname, 'src/copyStyles/index.ts'),
       },
 
       // formats: ['es', 'cjs', 'umd', 'iife'],

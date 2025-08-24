@@ -3,14 +3,11 @@
  * @param value - The value to check
  * @returns true if the value is a negative number or bigint
  */
-export function isNegative(value: unknown): boolean {
+export const isNegative = (value: unknown): boolean => {
   if (typeof value === 'number') {
     return value < 0 || Object.is(value, -0);
   }
-  if (typeof value === 'bigint') {
-    return value < 0n;
-  }
-  return false;
+  return typeof value === 'bigint' ? value < 0n : !1;
 }
 
 /**

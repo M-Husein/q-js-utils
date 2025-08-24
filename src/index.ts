@@ -18,7 +18,9 @@ export * from './download';
 // export * from './pick'; // Option
 // export * from './omit'; // Option
 export * from './shape';
+export * from './mapSort';
 export * from './capitalize';
+export * from './copyStyles';
 
 // Re-export common types (if they are not already re-exported via a module)
 export * from './common-types';

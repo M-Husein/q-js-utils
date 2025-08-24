@@ -8,6 +8,5 @@
 export const padWithLeadingZeros = (
   num: number | string | null | undefined,
   targetLength: number = 2
-): string => {
-  return num ? ('' + num).padStart(targetLength, '0') : '';
-}
+): string => 
+  num ? ('' + num).padStart(targetLength, '0') : '';

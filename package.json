@@ -1,6 +1,6 @@
 {
   "name": "q-js-utils",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "A collection of JavaScript utilities.",
   "license": "MIT",
   "keywords": [
@@ -146,10 +146,20 @@
       "import": "./dist/shape.es.js",
       "require": "./dist/shape.cjs.js"
     },
+    "./mapSort": {
+      "types": "./dist/mapSort.d.ts",
+      "import": "./dist/mapSort.es.js",
+      "require": "./dist/mapSort.cjs.js"
+    },
     "./capitalize": {
       "types": "./dist/capitalize.d.ts",
       "import": "./dist/capitalize.es.js",
       "require": "./dist/capitalize.cjs.js"
+    },
+    "./copyStyles": {
+      "types": "./dist/copyStyles.d.ts",
+      "import": "./dist/copyStyles.es.js",
+      "require": "./dist/copyStyles.cjs.js"
     }
   },
   "files": [
