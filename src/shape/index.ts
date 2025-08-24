@@ -16,11 +16,10 @@ export const shape = <
   obj: T,
   keys: readonly K[],
   action?: boolean | number | string | null | undefined, // "pick" | "omit" = "pick" 
-): Partial<Pick<T, K>> | Partial<Omit<T, K>> => {
-  return Object.fromEntries(
+): Partial<Pick<T, K>> | Partial<Omit<T, K>> => 
+  Object.fromEntries(
     Object.entries(obj).filter(([key]) => {
       const keysIncluded = keys.includes(key as K);
       return action ? !keysIncluded : keysIncluded;
     })
   ) as Partial<Pick<T, K>> | Partial<Omit<T, K>>;
-}
