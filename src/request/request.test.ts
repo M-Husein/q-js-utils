@@ -22,7 +22,7 @@ describe('request function', () => {
     //   body: new ReadableStream(), // Mock body for progress
     // });
 
-    const data = await request('http://test.com/data').json();
+    const data = await request('http://test.com/data');
     expect(data).toEqual({ id: 1, name: 'Test Item' });
     expect(global.fetch).toHaveBeenCalledWith('http://test.com/data', expect.any(Object));
   });
