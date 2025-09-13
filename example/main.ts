@@ -10,6 +10,7 @@ import { darkOrLight } from '../src/darkOrLight';
 import { isEqual } from '../src/isEqual';
 import { cn } from '../src/cn';
 import { download } from '../src/download';
+import { uuidv7 } from '../src/uuidv7';
 
 import requestExamples from '../src/request/example';
 
@@ -116,7 +117,7 @@ async function runExamples() {
     asyncSimulation({ delay: 500 }).then(console.log); // 1
 
     // Failure case
-    asyncSimulation({ isFail: true }).catch(err => console.error('Failed with:', err)); // 0
+    asyncSimulation({ isFail: true }).catch(err => console.error('asyncSimulation Failed with: ', err)); // 0
 
     // Abort case
     const controller = new AbortController();
@@ -153,9 +154,14 @@ async function runExamples() {
         )
     );
 
+    // Test uuidv7
+    console.log('1. uuidv7:', uuidv7());
+    console.log('2. uuidv7:', uuidv7());
+    console.log('3. uuidv7:', uuidv7());
+
     // Test request function
     try {
-        const todo = await request('https://jsonplaceholder.typicode.com/todos/1').json();
+        const todo = await request('https://jsonplaceholder.typicode.com/todos/1');
         console.log('request Todo:', todo);
     } catch (error) {
         console.error('request Error:', error);

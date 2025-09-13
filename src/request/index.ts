@@ -1,187 +1,134 @@
-import { FetchOptions, ChainedFetchResponse, BeforeHookParams } from './types';
-import { appendQueryParams, processRequestBody, handleProgress } from './utils';
+import { FetchOptions, BeforeHookParams, ResponseType } from './types';
+import { appendQueryParams, handleProgress, fetchError } from './utils';
 
 /**
- * A wrapper around `Promise<Response>` that provides convenient chained methods
- * for parsing the response body (e.g., `.json()`, `.text()`, etc.).
- * This class implements the `ChainedFetchResponse` interface, offering a consistent API.
+ * A highly configurable fetch wrapper that simplifies making HTTP requests.
+ * It supports query parameters, a request timeout, and a flexible hook system.
+ * The function can either return the parsed response data directly or the raw Response object,
+ * depending on the 'responseType' option.
+ *
+ * @param {string} url The URL of the resource to fetch.
+ * @param {FetchOptions} [options={}] An object containing custom and standard fetch options.
+ * @param {object} [options.headers={}] Headers to be included in the request.
+ * @param {AbortSignal} [options.signal] An AbortSignal instance for canceling the request.
+ * @param {ResponseType} [options.responseType] The desired format for the response body. If omitted, returns the raw Response object.
+ * @param {object} [options.query={}] Query parameters to be appended to the URL.
+ * @param {number} [options.timeout] The request timeout in milliseconds.
+ * @param {BeforeHook} [options.beforeHook] A hook executed before the request is made.
+ * @param {OnProgressCallback} [options.onProgress] A callback for monitoring download progress.
+ * @param {object} options.body The request body.
+ * @param {string} options.method The request method.
+ * @returns {Promise<any | Response>} A Promise that resolves to the parsed response data if `responseType` is provided,
+ * otherwise, it resolves to the raw `Response` object.
+ * @throws {FetchError} Throws a `FetchError` for HTTP status codes outside of the 200-299 range,
+ * or for network failures. The error object includes status and parsed error data.
+ *
+ * @example
+ * // Returns the raw Response object for manual handling
+ * const response = await request('https://api.example.com/data');
+ * const data = await response.json();
  */
-class FetchResponse implements ChainedFetchResponse {
-  /**
-   * @param response - The Promise that resolves to the raw `Response` object from `fetch`.
-   */
-  constructor(public readonly response: Promise<Response>) {}
+export const request = async (
+  url: string,
+  {
+    headers = {},
+    signal: externalSignal, // External AbortSignal provided by the caller
+    responseType = "json",
+    query = {},
+    timeout,
+    beforeHook,
+    afterHook,
+    onProgress,
+    ...options // Remaining standard RequestInit properties (e.g., method, body, cache, credentials)
+  }: FetchOptions = {}
+): Promise<any> => {
+  let finalOptions = {
+    ...options,
+    headers: new Headers(headers)
+  } as RequestInit;
 
-  /**
-   * Internal helper to abstract the parsing logic, ensuring that any errors
-   * during response resolution or parsing are propagated correctly.
-   * @template T - The expected type of the parsed response.
-   * @param parser - A function that takes a `Response` object and returns a Promise of the parsed data.
-   * @returns A Promise that resolves to the parsed data.
-   */
-  private async parse<T>(parser: (res: Response) => Promise<T>): Promise<T> {
-    try {
-      const res = await this.response;
-      return await parser(res);
-    } catch (error) {
-      throw error; // Re-throw any parsing or network errors
+  // FormData manages its own Content-Type, so do nothing.
+  // Null or undefined bodies don't need Content-Type either.
+  if (finalOptions.body != null && !(finalOptions.body instanceof FormData)) {
+    if (finalOptions.body instanceof URLSearchParams) {
+      (finalOptions.headers as Headers).set("Content-Type", "application/x-www-form-urlencoded");
+    } else if (
+      typeof finalOptions.body === "object" &&
+      !(finalOptions.body instanceof Blob) &&
+      !(finalOptions.body instanceof ArrayBuffer) &&
+      !(finalOptions.body instanceof ReadableStream)
+    ) {
+      (finalOptions.headers as Headers).set("Content-Type", "application/json");
+      finalOptions.body = JSON.stringify(finalOptions.body);
     }
   }
 
-  /**
-   * Parses the response body as JSON.
-   * @template T - The expected type of the JSON data.
-   * @returns A Promise that resolves to the parsed JSON object.
-   */
-  json<T = any>(): Promise<T> {
-    return this.parse<T>(res => res.json());
+  let requestParams: BeforeHookParams = { 
+    query, 
+    headers: finalOptions.headers
+  };
+
+  // Execute Before Hook if defined. It can modify `query` or `headers`.
+  if(beforeHook){
+    await beforeHook(requestParams);
   }
 
-  /**
-   * Parses the response body as plain text.
-   * @returns A Promise that resolves to the response body as a string.
-   */
-  text(): Promise<string> {
-    return this.parse<string>(res => res.text());
+  // let internalController: AbortController | undefined;
+  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+  const hasTimeout = timeout && timeout > 0;
+
+  if(hasTimeout || externalSignal){
+    let internalController: AbortController = new AbortController();
+    finalOptions.signal = internalController.signal;
+
+    if(externalSignal){
+      externalSignal.addEventListener("abort", () => internalController!.abort());
+    }
+
+    if(hasTimeout){
+      timeoutId = setTimeout(() => internalController!.abort(), timeout);
+    }
   }
 
-  /**
-   * Parses the response body as a Blob.
-   * @returns A Promise that resolves to the response body as a `Blob`.
-   */
-  blob(): Promise<Blob> {
-    return this.parse<Blob>(res => res.blob());
-  }
+  // finalOptions.signal = internalController?.signal;
 
-  /**
-   * Parses the response body as an ArrayBuffer.
-   * @returns A Promise that resolves to the response body as an `ArrayBuffer`.
-   */
-  arrayBuffer(): Promise<ArrayBuffer> {
-    return this.parse<ArrayBuffer>(res => res.arrayBuffer());
-  }
+  let response: Response;
+  try {
+    response = await fetch(
+      appendQueryParams(url, requestParams.query),
+      finalOptions
+    );
 
-  /**
-   * Parses the response body as FormData.
-   * @returns A Promise that resolves to the response body as `FormData`.
-   */
-  formData(): Promise<FormData> {
-    return this.parse<FormData>(res => res.formData());
-  }
-}
+    // Handle Download Progress if a callback is provided and Content-Length header exists.
+    // The response body is wrapped in a new stream to enable progress tracking.
+    if(onProgress && response.body && response.headers.has("Content-Length")){
+      response = await handleProgress(response, onProgress);
+    }
 
-/**
- * Performs an HTTP request with extended features, optimized for performance.
- * It provides custom error handling, request timeout, download progress tracking,
- * and pre/post-request hooks.
- *
- * This function returns a `ChainedFetchResponse` object, which allows chaining
- * methods like `.json()`, `.text()`, etc., to conveniently consume the response body.
- *
- * Network errors, request timeouts, and non-2xx HTTP statuses (`response.ok` is false).
- *
- * @param url - The URL for the request. Can be a relative path (e.g., '/api/data')
- * which will be resolved against the current origin, or an absolute URL.
- * @param options - An object containing request configuration, extending standard `RequestInit`.
- * @returns A `ChainedFetchResponse` object that wraps a `Promise<Response>`,
- * allowing for chained body parsing methods.
- * @throws {Error} For other network-related errors (e.g., CORS issues, DNS errors).
- */
-export const request = (
-  url: string,
-  {
-    headers = {}, // Default to an empty object for headers
-    signal: externalSignal, // External AbortSignal provided by the caller
-    query = {}, // Query parameters to append to the URL
-    timeout, // Request timeout in milliseconds
-    beforeHook, // Hook executed before the request
-    afterHook, // Hook executed after the response
-    onProgress, // Download progress callback
-    ...options // Remaining standard RequestInit properties (e.g., method, body, cache, credentials)
-  }: FetchOptions = {} // Default to an empty options object
-): ChainedFetchResponse => {
-  return new FetchResponse(
-    (async (): Promise<Response> => {
-      let finalOptions = {
-        ...options,
-        headers: new Headers(headers)
-      } as RequestInit;
-
-      let requestParams: BeforeHookParams = { 
-        query, 
-        headers: finalOptions.headers
-      };
-
-      // Execute Before Hook if defined. It can modify `query` or `headers`.
-      if (beforeHook) {
-        await beforeHook(requestParams);
+    // Execute After Hook if defined. It can modify the `response` object.
+    if(afterHook){
+      response = await afterHook(response, finalOptions);
+    }
+    
+    if(response.ok){
+      const parser = response[responseType as ResponseType];
+      if(typeof parser === "function"){
+        return await parser.call(response);
       }
 
-      // Process the request body (e.g., JSON.stringify, FormData handling)
-      // and set the appropriate Content-Type header.
-      processRequestBody(finalOptions);
+      // Raw
+      return response;
+    }
 
-      let internalController: AbortController | undefined;
-      let timeoutId: ReturnType<typeof setTimeout> | undefined;
-
-      const hasTimeout = timeout && timeout > 0;
-
-      if (hasTimeout || !!externalSignal) {
-        internalController = new AbortController();
-
-        if (externalSignal) {
-          externalSignal.addEventListener('abort', () => internalController!.abort());
-        }
-
-        if (hasTimeout) {
-          timeoutId = setTimeout(() => internalController!.abort(), timeout);
-        }
-      }
-
-      finalOptions.signal = internalController?.signal;
-
-      let response: Response;
-      try {
-        response = await fetch(
-          appendQueryParams(url, requestParams.query),
-          finalOptions
-        );
-
-        // Handle Download Progress if a callback is provided and Content-Length header exists.
-        // The response body is wrapped in a new stream to enable progress tracking.
-        if (onProgress && response.body && response.headers.has('Content-Length')) {
-          response = await handleProgress(response, onProgress);
-        }
-
-        // Execute After Hook if defined. It can modify the `response` object.
-        if (afterHook) {
-          response = await afterHook(response, finalOptions);
-        }
-        
-        if (response.ok) {
-          return response;
-        }
-
-        // Handle Non-OK HTTP Responses (e.g., 404, 500).
-        let err: any = new Error('Fetch failed');
-
-        // Attach specific, commonly used properties directly for convenience
-        err.name = 'FetchError';
-        err.status = response.status;
-        err.statusText = response.statusText;
-        err.data = await response.json().catch(() => null); // The parsed JSON error body
-        // Attach the full response object for comprehensive debugging
-        // Note: The body stream of `response` will likely be consumed by `response.json()` above.
-        // err.response = response;
-        throw err;
-      } 
-      catch (error) {
-        throw error;
-      } 
-      finally {
-        // Always clear the timeout if it was set to prevent memory leaks.
-        if (timeoutId) clearTimeout(timeoutId);
-      }
-    })()
-  );
+    // Handle Non-OK HTTP Responses (e.g., 404, 500).
+    throw await fetchError(response);
+  }
+  catch(err){
+    throw err;
+  } 
+  finally{
+    // Always clear the timeout if it was set to prevent memory leaks.
+    if(timeoutId) clearTimeout(timeoutId);
+  }
 }
