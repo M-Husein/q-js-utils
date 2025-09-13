@@ -271,10 +271,39 @@ pauseButton.addEventListener('click', () => {
 import { request } from 'q-js-utils/request';
 
 try {
-  const todo = await request('https://jsonplaceholder.typicode.com/todos/1').json();
+  const todo = await request('https://jsonplaceholder.typicode.com/todos/1');
   console.log('request Todo:', todo);
 } catch (error) {
   console.error('request Error:', error);
+}
+
+console.log('Download Progress');
+try {
+  const blob = await request('https://httpbin.org/bytes/1048576', {
+    // @ts-ignore
+    // responseType: "hell",
+    responseType: "blob",
+    onProgress: (progress) => {
+      console.log('progress: ', progress);
+      if (progress.total) {
+        console.log(
+          `Progress: ${progress.loaded} / ${progress.total} bytes (${(
+            progress.progress! * 100
+          ).toFixed(2)}%)`,
+        );
+      } else {
+        console.log(`Progress: ${progress.loaded} bytes loaded (total unknown)`);
+      }
+    },
+  });
+
+  console.log('Download blob: ', blob);
+  console.log('Download complete. Blob size: ', blob?.size, 'bytes');
+} catch (error: any) {
+  console.error('4. Download Progress Error: ', error);
+  for(let err in error){
+    console.error('err: ', err);
+  }
 }
 ```
 
@@ -390,6 +419,24 @@ cn(
   undefinedConst && 'undefinedConst',
   undefinedLet && 'undefinedLet',
 );
+```
+
+### uuidv7
+Generate a UUIDv7 (time-ordered, monotonic).
+RFC 9562: [https://www.rfc-editor.org/rfc/rfc9562.html](https://www.rfc-editor.org/rfc/rfc9562.html)
+
+```ts
+import { uuidv7 } from 'q-js-utils/uuidv7';
+
+// Lexicographically sorted even if generated in the same millisecond.
+console.log('1. uuidv7:', uuidv7());
+console.log('2. uuidv7:', uuidv7());
+console.log('3. uuidv7:', uuidv7());
+
+// Example output:
+// 018f3fcd-04d1-7a8f-9f4a-1b33a5a2f7c9
+// 018f3fcd-04d1-7a90-8a77-3a13f20dcbae
+// 018f3fcd-04d1-7a91-81df-1d92ff45a4ec
 ```
 
 ### download

@@ -5,6 +5,12 @@
 export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS';
 
 /**
+ * Represents the different types of response parsing methods.
+ * This is used to automatically parse the response body.
+ */
+export type ResponseType = 'json' | 'text' | 'blob' | 'formData' | 'arrayBuffer';
+
+/**
  * Type for request payload (body).
  * It can be an object (for JSON), FormData, URLSearchParams, binary data (Blob, ArrayBuffer),
  * or a plain string.
@@ -77,49 +83,6 @@ export type AfterHook = (response: Response, options: RequestInit) => Response |
 // export type AfterHook = (url: string, options: RequestInit, response: Response) => Response | Promise<Response>;
 
 /**
- * Interface for the object returned by the `request` function,
- * enabling chained response body parsing methods like `.json()`, `.text()`, etc.
- */
-export interface ChainedFetchResponse {
-  /**
-   * The underlying Promise that resolves to the raw `Response` object.
-   * Useful if you need to access the raw response without parsing its body.
-   */
-  readonly response: Promise<Response>;
-  
-  /**
-   * Parses the response body as JSON.
-   * @template T - The expected type of the JSON response.
-   * @returns A Promise that resolves to the parsed JSON object.
-   */
-  json<T = any>(): Promise<T>;
-
-  /**
-   * Parses the response body as plain text.
-   * @returns A Promise that resolves to the response body as a string.
-   */
-  text(): Promise<string>;
-
-  /**
-   * Parses the response body as a Blob.
-   * @returns A Promise that resolves to the response body as a `Blob`.
-   */
-  blob(): Promise<Blob>;
-
-  /**
-   * Parses the response body as an ArrayBuffer.
-   * @returns A Promise that resolves to the response body as an `ArrayBuffer`.
-   */
-  arrayBuffer(): Promise<ArrayBuffer>;
-
-  /**
-   * Parses the response body as FormData.
-   * @returns A Promise that resolves to the response body as `FormData`.
-   */
-  formData(): Promise<FormData>;
-}
-
-/**
  * Options specific to a single fetch request.
  * These extend the standard `RequestInit` interface and add custom functionalities.
  */
@@ -148,6 +111,12 @@ export interface FetchOptions extends Omit<RequestInit, 'body' | 'headers' | 'si
    * and an `AbortError` will be thrown. A value of `0` or `undefined` means no timeout.
    */
   timeout?: number;
+
+  /**
+   * The desired format for the response body. If provided, the function returns the parsed data.
+   * If not provided, the function returns the raw Response object.
+   */
+  responseType?: ResponseType;
 
   /**
    * A hook function executed before this specific request is made.

@@ -33,6 +33,7 @@ export default defineConfig({
         mapSort: resolve(__dirname, 'src/mapSort/index.ts'),
         capitalize: resolve(__dirname, 'src/capitalize/index.ts'),
         copyStyles: resolve(__dirname, 'src/copyStyles/index.ts'),
+        uuidv7: resolve(__dirname, 'src/uuidv7/index.ts'),
       },
 
       // formats: ['es', 'cjs', 'umd', 'iife'],

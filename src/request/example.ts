@@ -7,7 +7,7 @@ export default async function runExamples() {
 
   // 1. Basic GET request (defaults to GET)
   try {
-    const data = await request('https://jsonplaceholder.typicode.com/todos/1').json();
+    const data = await request('https://jsonplaceholder.typicode.com/todos/1');
     console.log('1. Basic GET (title):', data.title);
   } catch (error) {
     console.error('1. Basic GET (Error):', error);
@@ -17,7 +17,7 @@ export default async function runExamples() {
   try {
     const text = await request('https://jsonplaceholder.typicode.com/todos', {
       query: { userId: 1, completed: false },
-    }).json();
+    });
     // console.log('2. GET with query params (first 100 chars of text):', text.substring(0, 100) + '...');
     console.log('2. GET with query params json:', text);
   } catch (error) {
@@ -37,7 +37,7 @@ export default async function runExamples() {
         },
         headers: { 'X-Request-Specific': 'Hello' }, // Explicit headers for this request
       },
-    ).json();
+    );
     console.log('3. POST JSON (new post ID):', newPost.id, newPost.title);
   } catch (error) {
     console.error('3. POST JSON Error:', error);
@@ -47,8 +47,11 @@ export default async function runExamples() {
   console.log('4. Download Progress');
   try {
     const blob = await request('https://httpbin.org/bytes/1048576', {
+      // @ts-ignore
+      // responseType: "hell",
+      responseType: "blob",
       onProgress: (progress) => {
-        console.log('progress: ', progress);
+        console.log('progress:', progress);
         if (progress.total) {
           console.log(
             `Progress: ${progress.loaded} / ${progress.total} bytes (${(
@@ -59,23 +62,22 @@ export default async function runExamples() {
           console.log(`Progress: ${progress.loaded} bytes loaded (total unknown)`);
         }
       },
-    }).blob();
+    });
 
-    console.log('Download complete. Blob size:', blob.size, 'bytes');
+    console.log('Download blob: ', blob);
+    console.log('Download complete. Blob size:', blob?.size, 'bytes');
   } catch (error: any) {
     console.error('4. Download Progress Error:', error);
-    // console.error('error.name: ', error.name);
-    // console.error('error.message: ', error.message);
     for(let err in error){
-      console.error('err: ', err);
+      console.error('err:', err);
     }
   }
 
   // 5. Request timeout
   console.log('5. Request Timeout (should fail)');
   try {
-    await request('https://httpbin.org/delay/2', { timeout: 100 }).json();
-    console.log('   Timeout test succeeded (unexpected)');
+    await request('https://httpbin.org/delay/2', { timeout: 100 });
+    console.log('Timeout test succeeded (unexpected)');
   } catch (error) {
     console.error('Other Error during timeout test:', error);
   }
@@ -89,15 +91,11 @@ export default async function runExamples() {
   }, 50);
 
   try {
-    await request('https://httpbin.org/delay/2', { signal: abortController.signal }).json();
+    await request('https://httpbin.org/delay/2', { signal: abortController.signal });
     console.log('Manual abort test succeeded (unexpected)');
   } catch (error: any) {
     console.log('Error:', error);
-    // console.log('Error mesage:', error.mesage);
-    // console.log('Error name:', error.name);
-    // console.log('Error status:', error.status);
-    // console.log('Error statusText:', error.statusText);
-    // console.log('Error data:', error.data);
+    console.log('Error name:', error.name);
   } finally {
     clearTimeout(abortTimeout);
   }
@@ -105,20 +103,21 @@ export default async function runExamples() {
   // 7. Custom error handling for non-2xx status (404 Not Found)
   console.log('7. Custom Error Handling (404 Not Found)');
   try {
-    await request('https://jsonplaceholder.typicode.com/non-existent-path-12345').json();
+    await request('https://jsonplaceholder.typicode.com/non-existent-path-12345');
   } catch (error: any) {
     console.log('Error:', error);
-    console.log('Error mesage:', error.mesage);
     console.log('Error name:', error.name);
     console.log('Error status:', error.status);
     console.log('Error statusText:', error.statusText);
+    console.log('Error message:', error.message);
+    console.log('Error response:', error.response);
     console.log('Error data:', error.data);
   }
 
   // 8. Error during JSON parsing (invalid JSON from server for 200 OK)
   console.log('8. Error during JSON parsing (invalid JSON from server for 200 OK)');
   try {
-    const validResponse = await request('https://jsonplaceholder.typicode.com/todos/1').json();
+    const validResponse = await request('https://jsonplaceholder.typicode.com/todos/1');
     console.log('Valid JSON parsed successfully:', validResponse.title);
   } catch (error) {
     if (error instanceof SyntaxError) {
@@ -138,7 +137,7 @@ export default async function runExamples() {
       },
       // url, 
       beforeHook: async ({ query, headers }) => { // requestOptions: RequestInit, query?: QueryParams | RequestInit | FetchOptions
-        console.log(`[Specific Before Hook] Preparing request headers: `, headers);
+        console.log('[Specific Before Hook] Preparing request headers:', headers);
         
         // requestOptions.headers.Authorization = 'Bearer';
         // (requestOptions.headers as Record<string, string>).Authorization = 'Bearer';
@@ -192,7 +191,7 @@ export default async function runExamples() {
         }
         return response;
       }
-    }).json();
+    });
     
     console.log('Hooked request data:', response.name);
   } catch (error) {
