@@ -34,6 +34,10 @@ export default defineConfig({
         capitalize: resolve(__dirname, 'src/capitalize/index.ts'),
         copyStyles: resolve(__dirname, 'src/copyStyles/index.ts'),
         uuidv7: resolve(__dirname, 'src/uuidv7/index.ts'),
+        safeJsonParse: resolve(__dirname, 'src/safeJsonParse/index.ts'),
+        safeStringify: resolve(__dirname, 'src/safeStringify/index.ts'),
+        safeDeepClone: resolve(__dirname, 'src/safeDeepClone/index.ts'),
+        retryAsync: resolve(__dirname, 'src/retryAsync/index.ts'),
       },
 
       // formats: ['es', 'cjs', 'umd', 'iife'],

@@ -11,6 +11,10 @@ import { isEqual } from '../src/isEqual';
 import { cn } from '../src/cn';
 import { download } from '../src/download';
 import { uuidv7 } from '../src/uuidv7';
+import { safeJsonParse } from '../src/safeJsonParse';
+import { safeStringify } from '../src/safeStringify';
+import { safeDeepClone } from '../src/safeDeepClone';
+import { retryAsync } from '../src/retryAsync';
 
 import requestExamples from '../src/request/example';
 
@@ -158,6 +162,38 @@ async function runExamples() {
     console.log('1. uuidv7:', uuidv7());
     console.log('2. uuidv7:', uuidv7());
     console.log('3. uuidv7:', uuidv7());
+
+    // Test safeJsonParse
+    console.log('1. safeJsonParse ok:', safeJsonParse('{"name":"Muhamad Husein","age":39}'));
+    console.log('2. safeJsonParse error:', safeJsonParse('{"name":"Muhamad Husein",age:39}'));
+
+    // Test safeStringify
+    console.log('1. safeStringify ok:', safeStringify({
+        name: "Muhamad Husein",
+        age: 39
+    }));
+
+    const obj2Stringify: any = {};
+    obj2Stringify.self = obj2Stringify;
+
+    // → '{"self":"[Circular]"}'
+    console.log('2. safeStringify Circular:', safeStringify(obj2Stringify));
+    console.log('3. safeStringify space:', safeStringify({ a: 1 }, 2));
+
+    // Test safeDeepClone
+    const obj2clone: any = { a: 1 };
+    obj2clone.self = obj2clone;
+
+    const cloned = safeDeepClone(obj2clone);
+    console.log('1. cloned !== obj2clone:', cloned !== obj2clone); // true
+    console.log('2. cloned.self === cloned:', cloned.self === cloned); // true
+
+    // Test retryAsync
+    retryAsync(
+        () => request('https://jsonplaceholder.typicode.com/users/1')
+    )
+    .then(() => console.log('then'))
+    .catch((err) => console.log('err:', err));
 
     // Test request function
     try {

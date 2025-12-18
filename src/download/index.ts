@@ -31,15 +31,18 @@ export const download = (
       a.href = objectUrl;
       a.download = name;
 
-      /** Compatibility: Safari may require DOM append */
+      /**
+       * @Compatibility : Safari may require DOM append
+      */
       if(/Safari/.test(uA) && !/Chrome/.test(uA)){
-        a.rel = "noopener noreferrer"; // For security
         a.hidden = true;
+        a.rel = "noopener noreferrer"; // For security
 
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-      }else{
+      }
+      else{
         a.click(); // Works fine in Chrome, Firefox, Edge
       }
       
@@ -48,7 +51,10 @@ export const download = (
         URL.revokeObjectURL(objectUrl);
         resolve(1);
       }
-      "requestIdleCallback" in window ? requestIdleCallback(cleanURL) : setTimeout(cleanURL, timeout);
+
+      "requestIdleCallback" in window 
+        ? requestIdleCallback(cleanURL) 
+        : setTimeout(cleanURL, timeout);
     }
     else reject(0);
   });

@@ -136,7 +136,8 @@ export const download = (
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-      }else{
+      }
+      else{
         a.click(); // Works fine in Chrome, Firefox, Edge
       }
       
@@ -145,6 +146,7 @@ export const download = (
         URL.revokeObjectURL(objectUrl);
         resolve();
       }
+
       "requestIdleCallback" in window ? requestIdleCallback(cleanURL) : setTimeout(cleanURL, timeout);
       return;
     }
