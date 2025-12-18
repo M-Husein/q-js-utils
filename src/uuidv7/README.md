@@ -1,6 +1,5 @@
 # uuidv7
 
-
 ## Usage
 ```ts
 import { uuidv7 } from 'q-js-utils/uuidv7';

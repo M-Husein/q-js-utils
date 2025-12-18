@@ -91,32 +91,32 @@ export interface FetchOptions extends Omit<RequestInit, 'body' | 'headers' | 'si
   body?: RequestBody;
 
   /**
-   * You explicitly destructure headers and use `new Headers(headers)`.
-   * `HeadersInit` allows string[][], Record<string, string>, or Headers.
-   */
-  headers?: HeadersInit; 
-
-  /**
    * An external `AbortSignal` to control the request lifecycle.
    * If provided, your internal timeout will not use this signal; it will create its own
    * `AbortController` if `timeout` is also set.
    */
   signal?: AbortSignal;
 
+  /**
+   * You explicitly destructure headers and use `new Headers(headers)`.
+   * `HeadersInit` allows string[][], Record<string, string>, or Headers.
+   */
+  headers?: HeadersInit;
+
   /** Query parameters to append to the URL. */
   query?: QueryParams;
-
-  /**
-   * Request timeout in milliseconds. If the request takes longer than this, it will be aborted
-   * and an `AbortError` will be thrown. A value of `0` or `undefined` means no timeout.
-   */
-  timeout?: number;
 
   /**
    * The desired format for the response body. If provided, the function returns the parsed data.
    * If not provided, the function returns the raw Response object.
    */
   responseType?: ResponseType;
+
+  /**
+   * Request timeout in milliseconds. If the request takes longer than this, it will be aborted
+   * and an `AbortError` will be thrown. A value of `0` or `undefined` means no timeout.
+   */
+  timeout?: number;
 
   /**
    * A hook function executed before this specific request is made.

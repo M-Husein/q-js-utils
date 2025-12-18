@@ -1,6 +1,6 @@
 {
   "name": "q-js-utils",
-  "version": "1.3.5",
+  "version": "1.3.6",
   "description": "A collection of JavaScript utilities.",
   "license": "MIT",
   "keywords": [
@@ -26,7 +26,11 @@
     "isEqual",
     "download",
     "shape",
-    "uuidv7"
+    "uuidv7",
+    "json",
+    "clone",
+    "async",
+    "promise"
   ],
   "author": "Muhamad Husein <m.husein27@gmail.com>",
   "homepage": "https://github.com/M-Husein/q-js-utils#readme",
@@ -166,6 +170,26 @@
       "types": "./dist/uuidv7.d.ts",
       "import": "./dist/uuidv7.es.js",
       "require": "./dist/uuidv7.cjs.js"
+    },
+    "./safeJsonParse": {
+      "types": "./dist/safeJsonParse.d.ts",
+      "import": "./dist/safeJsonParse.es.js",
+      "require": "./dist/safeJsonParse.cjs.js"
+    },
+    "./safeStringify": {
+      "types": "./dist/safeStringify.d.ts",
+      "import": "./dist/safeStringify.es.js",
+      "require": "./dist/safeStringify.cjs.js"
+    },
+    "./safeDeepClone": {
+      "types": "./dist/safeDeepClone.d.ts",
+      "import": "./dist/safeDeepClone.es.js",
+      "require": "./dist/safeDeepClone.cjs.js"
+    },
+    "./retryAsync": {
+      "types": "./dist/retryAsync.d.ts",
+      "import": "./dist/retryAsync.es.js",
+      "require": "./dist/retryAsync.cjs.js"
     }
   },
   "files": [

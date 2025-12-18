@@ -709,4 +709,9 @@ try {
 } catch (error) {
   console.error('9. Hooked request error:', error);
 }
+
+// 10. Returns the raw Response object for manual handling
+const responseRaw = await request('https://api.example.com/data', { responseType: void 0 });
+const dataRaw = await responseRaw.json();
+console.log('dataRaw:', dataRaw);
 ```

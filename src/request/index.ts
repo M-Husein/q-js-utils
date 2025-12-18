@@ -22,20 +22,15 @@ import { appendQueryParams, handleProgress, fetchError } from './utils';
  * otherwise, it resolves to the raw `Response` object.
  * @throws {FetchError} Throws a `FetchError` for HTTP status codes outside of the 200-299 range,
  * or for network failures. The error object includes status and parsed error data.
- *
- * @example
- * // Returns the raw Response object for manual handling
- * const response = await request('https://api.example.com/data');
- * const data = await response.json();
  */
 export const request = async (
   url: string,
   {
-    headers = {},
     signal: externalSignal, // External AbortSignal provided by the caller
-    responseType = "json",
+    headers = {},
     query = {},
-    timeout,
+    responseType = "json",
+    timeout, // File upload / export → 30–120s
     beforeHook,
     afterHook,
     onProgress,
@@ -49,15 +44,16 @@ export const request = async (
 
   // FormData manages its own Content-Type, so do nothing.
   // Null or undefined bodies don't need Content-Type either.
-  if (finalOptions.body != null && !(finalOptions.body instanceof FormData)) {
-    if (finalOptions.body instanceof URLSearchParams) {
+  if(finalOptions.body != null && !(finalOptions.body instanceof FormData)){
+    if(finalOptions.body instanceof URLSearchParams){
       (finalOptions.headers as Headers).set("Content-Type", "application/x-www-form-urlencoded");
-    } else if (
-      typeof finalOptions.body === "object" &&
-      !(finalOptions.body instanceof Blob) &&
-      !(finalOptions.body instanceof ArrayBuffer) &&
+    }
+    else if(
+      typeof finalOptions.body === "object" && 
+      !(finalOptions.body instanceof Blob) && 
+      !(finalOptions.body instanceof ArrayBuffer) && 
       !(finalOptions.body instanceof ReadableStream)
-    ) {
+    ){
       (finalOptions.headers as Headers).set("Content-Type", "application/json");
       finalOptions.body = JSON.stringify(finalOptions.body);
     }
@@ -126,7 +122,7 @@ export const request = async (
   }
   catch(err){
     throw err;
-  } 
+  }
   finally{
     // Always clear the timeout if it was set to prevent memory leaks.
     if(timeoutId) clearTimeout(timeoutId);
