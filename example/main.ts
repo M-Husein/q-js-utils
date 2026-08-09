@@ -3,7 +3,7 @@ import { debounce } from '../src/debounce';
 import { throttle } from '../src/throttle';
 import { request } from '../src/request';
 import { nextId } from '../src/nextId';
-import { asyncSimulation } from '../src/asyncSimulation';
+import { simulateAsync } from '../src/simulateAsync';
 import { str2Hex } from '../src/str2Hex';
 import { getInitials } from '../src/getInitials';
 import { darkOrLight } from '../src/darkOrLight';
@@ -118,14 +118,14 @@ async function runExamples() {
 
     // Test asyncSimulation function
     // Successful case
-    asyncSimulation({ delay: 500 }).then(console.log); // 1
+    simulateAsync({ delay: 500 }).then(console.log); // 1
 
     // Failure case
-    asyncSimulation({ isFail: true }).catch(err => console.error('asyncSimulation Failed with: ', err)); // 0
+    simulateAsync({ isFail: true }).catch(err => console.error('asyncSimulation Failed with: ', err)); // 0
 
     // Abort case
     const controller = new AbortController();
-    const promise = asyncSimulation({ signal: controller.signal });
+    const promise = simulateAsync({ signal: controller.signal });
     controller.abort();
     promise.catch(err => console.error(err)); // true
 

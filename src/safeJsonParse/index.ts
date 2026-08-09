@@ -1,3 +1,5 @@
+type Reviver = (this: any, key: string, value: any, context?: { source: string }) => any;
+
 /**
  * Safely parses a JSON string and returns a fallback value on failure.
  *
@@ -12,7 +14,8 @@
  *
  * @template T
  * @param {string | null | undefined} data - The JSON string to parse.
- * @param {T} [fallback={}] - Value returned when parsing fails or result is nullish.
+ * @param {Function(key, value, context)} reviver https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse#reviver
+ * @param {T} [ fallback = {} ] - Value returned when parsing fails or result is nullish. Default `{}`.
  * @returns {T} The parsed JSON value or the fallback.
  *
  * @example
@@ -30,16 +33,32 @@
  * @example
  * safeJsonParse('null', { foo: 'bar' })
  * // => { foo: 'bar' }
+ * 
+ * @example
+ * const bigJSON = '{"gross_gdp": 12345678901234567890}';
+ * const bigObj = safeJsonParse(
+ *  bigJSON,
+ *  {},
+ *  (key, value, context) => {
+ *    if (key === "gross_gdp" && context) {
+ *      return BigInt(context.source);
+ *    }
+ *    return value;
+ *  }
+ * );
+ * 
+ * console.log(bigObj.gross_gdp); // 12345678901234567890n (BigInt)
  */
 export const safeJsonParse = <T = Record<string, unknown>>(
   data: string | null | undefined,
-  fallback: T = {} as T
+  fallback: T = {} as T,
+  reviver?: Reviver
 ): T => {
   if (!data) return fallback;
 
   try {
-    return JSON.parse(data) ?? fallback;
+    return JSON.parse(data, reviver) ?? fallback;
   } catch {
     return fallback;
   }
-}
+};
