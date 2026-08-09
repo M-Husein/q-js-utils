@@ -499,3 +499,39 @@ console.log(capitalize("husein"));     // Husein
 console.log(capitalize("élève"));      // "Élève"
 console.log(capitalize("mañana"));     // "Mañana"
 ```
+
+### Available utilities:
+
+1. isNumber
+2. isNegative
+3. padWithLeadingZeros
+4. cache
+5. cacheJSON
+6. cacheWeak
+7. debounce
+8. debounceAdvanced
+9. throttle
+10. throttleAdvanced
+11. request
+12. nextId
+13. getInitials
+14. darkOrLight
+15. str2Hex
+16. obj2FormData
+17. isEqual
+18. cn
+19. download
+20. shape
+21. mapSort
+22. capitalize
+23. copyStyles
+24. uuidv7
+25. safeJsonParse
+26. safeStringify
+27. safeDeepClone
+28. retryAsync
+29. simulateAsync
+30. reverseObject
+31. copyToClipboard
+32. shareLink
+33. cookie (getCookie, setCookie, deleteCookie)
