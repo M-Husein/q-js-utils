@@ -1,6 +1,6 @@
 {
   "name": "q-js-utils",
-  "version": "1.3.6",
+  "version": "1.3.7",
   "description": "A collection of JavaScript utilities.",
   "license": "MIT",
   "keywords": [
@@ -190,6 +190,31 @@
       "types": "./dist/retryAsync.d.ts",
       "import": "./dist/retryAsync.es.js",
       "require": "./dist/retryAsync.cjs.js"
+    },
+    "./simulateAsync": {
+      "types": "./dist/simulateAsync.d.ts",
+      "import": "./dist/simulateAsync.es.js",
+      "require": "./dist/simulateAsync.cjs.js"
+    },
+    "./reverseObject": {
+      "types": "./dist/reverseObject.d.ts",
+      "import": "./dist/reverseObject.es.js",
+      "require": "./dist/reverseObject.cjs.js"
+    },
+    "./copyToClipboard": {
+      "types": "./dist/copyToClipboard.d.ts",
+      "import": "./dist/copyToClipboard.es.js",
+      "require": "./dist/copyToClipboard.cjs.js"
+    },
+    "./shareLink": {
+      "types": "./dist/shareLink.d.ts",
+      "import": "./dist/shareLink.es.js",
+      "require": "./dist/shareLink.cjs.js"
+    },
+    "./cookie": {
+      "types": "./dist/cookie.d.ts",
+      "import": "./dist/cookie.es.js",
+      "require": "./dist/cookie.cjs.js"
     }
   },
   "files": [

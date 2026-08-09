@@ -38,6 +38,11 @@ export default defineConfig({
         safeStringify: resolve(__dirname, 'src/safeStringify/index.ts'),
         safeDeepClone: resolve(__dirname, 'src/safeDeepClone/index.ts'),
         retryAsync: resolve(__dirname, 'src/retryAsync/index.ts'),
+        simulateAsync: resolve(__dirname, 'src/simulateAsync/index.ts'),
+        reverseObject: resolve(__dirname, 'src/reverseObject/index.ts'),
+        copyToClipboard: resolve(__dirname, 'src/copyToClipboard/index.ts'),
+        shareLink: resolve(__dirname, 'src/shareLink/index.ts'),
+        cookie: resolve(__dirname, 'src/cookie/index.ts'),
       },
 
       // formats: ['es', 'cjs', 'umd', 'iife'],

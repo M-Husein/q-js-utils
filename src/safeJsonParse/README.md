@@ -24,22 +24,6 @@ const safeJsonParse = (
 
 ## Option 2
 
-```ts
-const safeJsonParse = <T = Record<string, unknown>>(
-  value: string,
-  fallback: T = {} as T
-): T => {
-  try {
-    const parsed = JSON.parse(value);
-    return parsed ?? fallback;
-  } catch {
-    return fallback;
-  }
-}
-```
-
-## Option 3
-
 ### Strict object-only parser
 
 ```ts
@@ -56,7 +40,7 @@ const parseJsonObject = <T extends object>(
 }
 ```
 
-## Option 4
+## Option 3
 
 ### Allow unknown input (string | null | undefined)
 Useful for localStorage.getItem:
@@ -67,6 +51,7 @@ const parseJsonSafe = <T>(
   fallback: T
 ): T => {
   if (!value) return fallback;
+  
   try {
     return JSON.parse(value) ?? fallback;
   } catch {
